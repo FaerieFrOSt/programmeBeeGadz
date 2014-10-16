@@ -8,7 +8,7 @@
 
 CC = g++
 
-SUFFIX = .c
+SUFFIX = .cpp
 
 PREFIX = .
 
