@@ -6,7 +6,9 @@
 #
 #------------------------------------------------------------------------------
 
-CC = gcc
+CC = g++
+
+SUFFIX = .c
 
 PREFIX = .
 
@@ -20,18 +22,18 @@ LIB = $(PREFIX)/libnfc/libnfc.a -lusb
 
 SRCDIR = $(PREFIX)/src
 
-SRC = $(wildcard $(SRCDIR)/*.c)
+SRC = $(wildcard $(SRCDIR)/*$(SUFFIX))
 
 OBJDIR = $(PREFIX)/obj
 
-OBJ = $(subst $(OBJDIR), $(SRCDIR), $(SRC:.c=.o))
+OBJ = $(subst $(OBJDIR), $(SRCDIR), $(SRC:$(SUFFIX)=.o))
 
 all: $(EXE)
 
 $(EXE): $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $^ $(INC) $(LIB)
 
-%.o: %.c
+%.o: %$(SUFFIX)
 	$(CC) $(CFLAGS) $(INC) -o $@ -c $<
 
 clean:
