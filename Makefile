@@ -26,14 +26,14 @@ SRC = $(wildcard $(SRCDIR)/*$(SUFFIX))
 
 OBJDIR = $(PREFIX)/obj
 
-OBJ = $(subst $(OBJDIR), $(SRCDIR), $(SRC:$(SUFFIX)=.o))
+OBJ = $(subst $(SRCDIR), $(OBJDIR), $(SRC:$(SUFFIX)=.o))
 
 all: $(EXE)
 
 $(EXE): $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $^ $(INC) $(LIB)
 
-%.o: %$(SUFFIX)
+$(OBJDIR)/%.o: $(SRCDIR)/%$(SUFFIX)
 	$(CC) $(CFLAGS) $(INC) -o $@ -c $<
 
 clean:
