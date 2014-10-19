@@ -16,7 +16,7 @@ EXE = a.out
 
 INC = -I$(PREFIX)/libnfc -I$(PREFIX)/include
 
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -g -Wall -Werror -Wextra
 
 LIB = $(PREFIX)/libnfc/libnfc.a -lusb
 
