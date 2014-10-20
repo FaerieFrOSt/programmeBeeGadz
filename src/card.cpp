@@ -10,6 +10,10 @@ const uint8_t   Card::keys[] =
 	0xd3, 0xf7, 0xd3, 0xf7, 0xd3, 0xf7,
 	0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5,
 	0xb0, 0xb1, 0xb2, 0xb3, 0xb4, 0xb5,
+	0x4d, 0x3a, 0x99, 0xc3, 0x51, 0xdd,
+	0x1a, 0x98, 0x2c, 0x7e, 0x45, 0x9a,
+	0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff,
+	0xab, 0xcd, 0xef, 0x12, 0x34, 0x56,
 };
 
 Card::Card(void *device, Printer *print, uint8_t uid[8], uint8_t type) : m_type(type), m_print(print), m_device(device)
@@ -38,11 +42,19 @@ bool    Card::read()
 		if (!loadMifare())
 			return false;
 	}else
+	{
+		m_print->printError("Not a supported card yet!");
 		return false;
+	}
 	m_print->printDebug("Data on card :");
 	for (size_t i = 0; i < 16; ++i)
+	{
+		m_print->printDebug("Sector " + Printer::arrayToString<size_t>(&i, 1) + ":");
 		for (size_t j = 0; j < 4; ++j)
-			m_print->printDebug(Printer::arrayToString<uint8_t>(m_data[i][j], 16, 4));
+		{
+			m_print->printDebug("Block " + Printer::arrayToString<size_t>(&j, 1) + " : " + Printer::arrayToString<uint8_t>(m_data[i][j], 16, 4));
+		}
+	}
 	return false;
 }
 
