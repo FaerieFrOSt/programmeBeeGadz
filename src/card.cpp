@@ -14,7 +14,7 @@ const uint8_t   Card::keys[] =
 
 Card::Card(void *device, Printer *print, uint8_t uid[8], uint8_t type) : m_type(type), m_print(print), m_device(device)
 {
-	std::memcpy(&m_uid, uid, 8);
+	std::memcpy(&m_uid, uid, 4);
 }
 
 Card::~Card()
@@ -32,7 +32,7 @@ bool    Card::operator!=(Card &other)
 
 bool    Card::read()
 {
-	std::memset(m_data, 0, sizeof(block) * 16 * 4);
+	std::memset(m_data, 0, sizeof(uint8_t) * 1024);
 	if (m_type == Card::MifareClassic)
 	{
 		if (!loadMifare())
@@ -41,7 +41,8 @@ bool    Card::read()
 		return false;
 	m_print->printDebug("Data on card :");
 	for (size_t i = 0; i < 16; ++i)
-		m_print->printDebug(Printer::arrayToString<block>(m_data[i], 4, 4));
+		for (size_t j = 0; j < 4; ++j)
+			m_print->printDebug(Printer::arrayToString<uint8_t>(m_data[i][j], 16, 4));
 	return false;
 }
 
@@ -73,7 +74,7 @@ bool    Card::authenticate(size_t s)
 		}
 	}
 	m_print->printError("Error while trying to authenticate sector " + Printer::arrayToString<size_t>(&s, 1));
-	return res;
+	return false;
 }
 
 bool    Card::readData(size_t s)
@@ -95,18 +96,26 @@ bool    Card::readData(size_t s)
 				device->deleteCard();
 				return false;
 			}
-		}
+		}else
+			std::memcpy(m_data[s][i], mp.mpd.abtData, 16);
 	}
 	return true;
 }
 
 bool    Card::loadMifare()
 {
-	for (size_t i = 0; i < sizeof(m_data) / sizeof(sector); ++i)
+	for (size_t i = 0; i < 16; ++i)
 	{
 		if (authenticate(i))
+		{
 			if (!readData(i))
+			{
 				m_print->printError("Error while loading sector " + Printer::arrayToString<size_t>(&i, 1));
+				return false;
+			}
+		}else
+			return false;
 	}
-	return false;	
+	m_print->printInfo("Tag reading completed !\n");
+	return true;
 }
