@@ -9,5 +9,6 @@ int main()
 	if (!nfc.init())
 		return 1;
 	nfc.findCard();
+	nfc.readCard();
 	return 0;
 }

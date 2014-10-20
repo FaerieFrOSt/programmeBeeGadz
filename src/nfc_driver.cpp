@@ -5,24 +5,11 @@
 
 #include "nfc_driver.h"
 #include <nfc/nfc-types.h>
-#include <cstring>
-#include <sstream>
-#include <iomanip>
 
-nfc_context *NfcDevice::m_context = 0;
+nfc_context *NfcDevice::m_context = nullptr;
 int NfcDevice::m_instances = 0;
 
-template<typename T>
-std::string arrayToString(T array[], size_t len)
-{
-	std::stringstream  oss("");
-	oss << std::hex << std::setfill('0');
-	for (size_t tmp = 0; tmp < len; ++tmp)
-		oss << std::setw(2) << +array[tmp] << " ";
-	return oss.str();
-}
-
-NfcDevice::NfcDevice(Printer *print) : m_device(0), m_print(print), m_isInit(false)
+NfcDevice::NfcDevice(Printer *print) : m_device(nullptr), m_print(print), m_isInit(false)
 {
 	++m_instances;
 }
@@ -40,7 +27,7 @@ bool    NfcDevice::init()
 		}
 	}
 	m_print->printDebug("Openning device");
-	m_device = nfc_open(m_context, 0);
+	m_device = nfc_open(m_context, nullptr);
 	if (!m_device)
 	{
 		m_print->printError("Error, unable to open NFC device");
@@ -65,23 +52,38 @@ NfcDevice::~NfcDevice()
 		nfc_exit(m_context);
 }
 
-Card    *NfcDevice::findCard()
+bool    NfcDevice::findCard()
 {
 	static const nfc_modulation nmMifare = {
 		.nmt = NMT_ISO14443A,
 		.nbr = NBR_106,
 	};
 
-	Card    *tmp;
 	m_print->printDebug("Searching for a card...");
-	if (nfc_initiator_select_passive_target(m_device, nmMifare, 0, 0, &m_target) > 0)
+	if (nfc_initiator_select_passive_target(m_device, nmMifare, nullptr, 0, &m_target) > 0)
 	{
 		m_print->printDebug("Found NFC tag : ");
-		m_print->printDebug(arrayToString<uint8_t>(m_target.nti.nai.abtUid, m_target.nti.nai.szUidLen));
-		m_print->printDebug(arrayToString<uint8_t>(&m_target.nti.nai.abtAtqa[1], 1));
-		tmp = new Card(m_target.nti.nai.abtUid, m_target.nti.nai.abtAtqa[1]);
-		return tmp;
+		m_print->printDebug("UID : " + Printer::arrayToString<uint8_t>(m_target.nti.nai.abtUid, m_target.nti.nai.szUidLen));
+		m_print->printDebug("Type : " + Printer::arrayToString<uint8_t>(&m_target.nti.nai.abtAtqa[1], 1));
+		std::unique_ptr<Card>    tmp(new Card(this, m_print, m_target.nti.nai.abtUid, m_target.nti.nai.abtAtqa[1]));
+		if (static_cast<bool>(m_card) && *m_card != *tmp)
+			m_card = std::move(tmp);
+		else if (!m_card)
+			m_card = std::move(tmp);
+		return true;
 	}
 	m_print->printError("Error while searching for a card");
-	return 0;
+	return false;
+}
+
+bool    NfcDevice::mifareCmd(mifare_cmd key, size_t sector, mifare_param *param)
+{
+	return nfc_initiator_mifare_cmd(m_device, key, sector, param);
+}
+
+bool    NfcDevice::readCard()
+{
+	if (m_card)
+		return m_card->read();
+	return false;
 }
