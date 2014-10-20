@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/19 23:08:09 by availlan          #+#    #+#             */
-/*   Updated: 2014/10/21 00:01:38 by availlan         ###   ########.fr       */
+/*   Updated: 2014/10/21 00:21:38 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ class   Card
 	static const uint8_t    keys[];
 
 	bool    loadMifare();
+	bool    readData(size_t sector);
 	bool    authenticate(size_t sector);
 
 	typedef uint16_t block;

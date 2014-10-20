@@ -9,7 +9,7 @@
 nfc_context *NfcDevice::m_context = nullptr;
 int NfcDevice::m_instances = 0;
 
-NfcDevice::NfcDevice(Printer *print) : m_device(nullptr), m_print(print), m_isInit(false)
+NfcDevice::NfcDevice(Printer *print) : m_device(nullptr), m_print(print), m_isInit(false), m_isToDelete(false)
 {
 	++m_instances;
 }
@@ -39,7 +39,19 @@ bool    NfcDevice::init()
 		nfc_perror(m_device, "nfc_initiator_init");
 		return false;
 	}
-	m_print->printDebug(std::string("Device name : ") + std::string(nfc_device_get_name(m_device)));
+	m_print->printDebug("Device name : " + std::string(nfc_device_get_name(m_device)));
+	return true;
+}
+
+bool    NfcDevice::infiniteSelect(bool infinite)
+{
+	m_print->printDebug("Setting the device to try only once to find a tag");
+	if (nfc_device_set_property_bool(m_device, NP_INFINITE_SELECT, infinite) < 0)
+	{
+		m_print->printError("Error while trying to set property");
+		nfc_perror(m_device, "nfc_device_set_property_bool");
+		return false;
+	}
 	return true;
 }
 
@@ -59,6 +71,12 @@ bool    NfcDevice::findCard()
 		.nbr = NBR_106,
 	};
 
+	infiniteSelect(true);
+	if (m_isToDelete && static_cast<bool>(m_card))
+	{
+		m_card.reset();
+		m_isToDelete = false;
+	}
 	m_print->printDebug("Searching for a card...");
 	if (nfc_initiator_select_passive_target(m_device, nmMifare, nullptr, 0, &m_target) > 0)
 	{
@@ -86,4 +104,20 @@ bool    NfcDevice::readCard()
 	if (m_card)
 		return m_card->read();
 	return false;
+}
+
+void    NfcDevice::deleteCard()
+{
+	m_isToDelete = true;
+}
+
+bool    NfcDevice::findCard(uint8_t uid[8], size_t len)
+{
+	static const nfc_modulation nmMifare = {
+		.nmt = NMT_ISO14443A,
+		.nbr = NBR_106,
+	};
+
+	infiniteSelect(false);
+	return nfc_initiator_select_passive_target(m_device, nmMifare, uid, len, nullptr) > 0;
 }
