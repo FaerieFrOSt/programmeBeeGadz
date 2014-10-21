@@ -18,6 +18,8 @@ const uint8_t   Card::keys[] =
 
 Card::Card(void *device, Printer *print, uint8_t uid[8], uint8_t type) : m_type(type), m_print(print), m_device(device)
 {
+	for (int i = 0; i < 16; ++i)
+		m_sectorState[i] = Card::DIRTY;
 	std::memcpy(&m_uid, uid, 4);
 }
 
@@ -34,12 +36,12 @@ bool    Card::operator!=(Card &other)
 	return m_uid != other.m_uid;
 }
 
-bool    Card::read()
+bool    Card::read(size_t sector)
 {
 	std::memset(m_data, 0, sizeof(uint8_t) * 1024);
 	if (m_type == Card::MifareClassic)
 	{
-		if (!loadMifare())
+		if (!loadMifare(sector))
 			return false;
 	}else
 	{
@@ -47,15 +49,24 @@ bool    Card::read()
 		return false;
 	}
 	m_print->printDebug("Data on card :");
-	for (size_t i = 0; i < 16; ++i)
+	if (sector == 666)
+		for (size_t i = 0; i < 16; ++i)
+		{
+			m_print->printDebug("Sector " + Printer::arrayToString<size_t>(&i, 1) + ":");
+			for (size_t j = 0; j < 4; ++j)
+			{
+				m_print->printDebug("Block " + Printer::arrayToString<size_t>(&j, 1) + " : " + Printer::arrayToString<uint8_t>(m_data[i][j], 16));
+			}
+		}
+	else
 	{
-		m_print->printDebug("Sector " + Printer::arrayToString<size_t>(&i, 1) + ":");
+		m_print->printDebug("Sector " + Printer::arrayToString<size_t>(&sector, 1) + ":");
 		for (size_t j = 0; j < 4; ++j)
 		{
-			m_print->printDebug("Block " + Printer::arrayToString<size_t>(&j, 1) + " : " + Printer::arrayToString<uint8_t>(m_data[i][j], 16, 4));
+			m_print->printDebug("Block " + Printer::arrayToString<size_t>(&j, 1) + " : " + Printer::arrayToString<uint8_t>(m_data[sector][j], 16));
 		}
 	}
-	return false;
+	return true;
 }
 
 bool    Card::authenticate(size_t s)
@@ -108,14 +119,33 @@ bool    Card::readData(size_t s)
 				device->deleteCard();
 				return false;
 			}
+			return false;
 		}else
 			std::memcpy(m_data[s][i], mp.mpd.abtData, 16);
 	}
+	m_sectorState[s] = Card::CLEAN;
 	return true;
 }
 
-bool    Card::loadMifare()
+bool    Card::loadMifare(size_t sector)
 {
+	if (sector != 666)
+	{
+		if (authenticate(sector))
+		{
+			if (!readData(sector))
+			{
+				m_print->printError("Error while loading sector " + Printer::arrayToString<size_t>(&sector, 1));
+				return false;
+			}
+			else
+			{
+				m_print->printInfo("Tag reading completed !\n");
+				return true;
+			}
+		}else
+			return false;
+	}
 	for (size_t i = 0; i < 16; ++i)
 	{
 		if (authenticate(i))
@@ -129,5 +159,65 @@ bool    Card::loadMifare()
 			return false;
 	}
 	m_print->printInfo("Tag reading completed !\n");
+	return true;
+}
+
+bool    Card::write(size_t sector, uint8_t *data, size_t len)
+{
+	if (len >= 16 * 3)
+		return false;
+	if (sector == 0 || sector >= 16)
+		return false;
+	if (m_sectorState[sector] != Card::CLEAN)
+		if (!read(sector))
+			return false;
+	std::memcpy(m_data[sector], data, len);
+	m_sectorState[sector] = Card::MODIFIED;
+	m_print->printDebug("Wrote in array");
+	return true;
+}
+
+bool    Card::writeData(size_t sector)
+{
+	bool            res;
+	NfcDevice       *device;
+	mifare_param    mp;
+
+	std::memset(mp.mpd.abtData, 0, 16);
+	std::memcpy(mp.mpa.abtAuthUid, &m_uid, 4);
+	std::memcpy(mp.mpa.abtKey, &Card::keys[0], 6);
+	device = static_cast<NfcDevice*>(m_device);
+	for (size_t i = 0; i < 4; ++i)
+	{
+		std::memcpy(mp.mpd.abtData, m_data[sector][i], 16);
+		if (!(res = device->mifareCmd(MC_WRITE, sector * 4 + i, &mp)))
+		{
+			if (!device->findCard((uint8_t*)&m_uid, 4))
+			{
+				m_print->printError("The tag was removed !");
+				device->deleteCard();
+				return false;
+			}
+			return false;
+		}
+	}
+	m_sectorState[sector] = Card::DIRTY;
+	return true;
+}
+
+bool    Card::write()
+{
+	for (size_t i = 0; i < 16; ++i)
+	{
+		if (m_sectorState[i] == Card::DIRTY || m_sectorState[i] == Card::CLEAN)
+			continue;
+		if (!authenticate(i))
+			return false;
+		if (!writeData(i))
+		{
+			m_print->printError("Error while writing sector " + Printer::arrayToString<size_t>(&i, 1));
+			return false;
+		}
+	}
 	return true;
 }

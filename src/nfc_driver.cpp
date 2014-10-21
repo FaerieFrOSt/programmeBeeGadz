@@ -106,6 +106,13 @@ bool    NfcDevice::readCard()
 	return false;
 }
 
+bool    NfcDevice::readCard(size_t sector)
+{
+	if (m_card)
+		return m_card->read(sector);
+	return false;
+}
+
 void    NfcDevice::deleteCard()
 {
 	m_isToDelete = true;
@@ -120,4 +127,19 @@ bool    NfcDevice::findCard(uint8_t uid[8], size_t len)
 
 	infiniteSelect(false);
 	return nfc_initiator_select_passive_target(m_device, nmMifare, uid, len, nullptr) > 0;
+}
+
+bool    NfcDevice::writeCard(size_t sector, uint8_t *data, size_t len)
+{
+	if (m_card)
+		if (m_card->write(sector, data, len))
+			return m_card->write();
+	return false;
+}
+
+bool    NfcDevice::writeCard()
+{
+	if (m_card)
+		return m_card->write();
+	return false;
 }

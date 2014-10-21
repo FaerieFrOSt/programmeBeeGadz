@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/17 01:17:22 by availlan          #+#    #+#             */
-/*   Updated: 2014/10/21 00:48:59 by availlan         ###   ########.fr       */
+/*   Updated: 2014/10/21 21:56:02 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@ class   NfcDevice
 	bool    findCard();
 	bool    findCard(uint8_t uid[8], size_t len);
 	bool    readCard();
+	bool    readCard(size_t sector);
+	bool    writeCard();
+	bool    writeCard(size_t sector, uint8_t *data, size_t len);
 
 	void    deleteCard();
 
