@@ -14,11 +14,13 @@ PREFIX = .
 
 EXE = a.out
 
+LIBNFC = $(PREFIX)/libnfc/libnfc.a
+
 INC = -I$(PREFIX)/libnfc -I$(PREFIX)/include
 
 CFLAGS = -g -Wall -Werror -Wextra -std=c++11
 
-LIB = $(PREFIX)/libnfc/libnfc.a -lusb
+LIB = $(LIBNFC) -lusb
 
 SRCDIR = $(PREFIX)/src
 
@@ -28,7 +30,7 @@ OBJDIR = $(PREFIX)/obj
 
 OBJ = $(subst $(SRCDIR), $(OBJDIR), $(SRC:$(SUFFIX)=.o)) $(OBJDIR)/mifare.o
 
-all: $(EXE)
+all: $(LIBNFC) $(EXE)
 
 $(EXE): $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $^ $(INC) $(LIB)

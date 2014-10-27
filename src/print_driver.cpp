@@ -45,3 +45,8 @@ void    Printer::printInfo(std::string message)
 {
 	printMessage(Printer::INFO, message);
 }
+
+bool	Printer::isDebug() const
+{
+	return m_debug;
+}

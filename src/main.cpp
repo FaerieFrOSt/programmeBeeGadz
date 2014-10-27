@@ -5,11 +5,9 @@ int main()
 {
 	Printer p(true);
 	NfcDevice   nfc(&p);
-	/* uint8_t     data[4] = {0xda, 0xbb, 0xcc, 0xdd }; */
+	Card		*card;
 
-	if (!nfc.init())
-		return 1;
-	nfc.findCard();
-	nfc.readCard(0);
+	card = nfc.findCard();
+	uint8_t **sector = card->read(1);
 	return 0;
 }

@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/19 22:30:28 by availlan          #+#    #+#             */
-/*   Updated: 2014/10/20 01:42:12 by availlan         ###   ########.fr       */
+/*   Updated: 2014/10/26 14:36:48 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ class   Printer
 	void    printDebug(std::string message);
 	void    printError(std::string message);
 	void    printInfo(std::string message);
+
+	bool	isDebug() const;
 
 	template<typename T>
 	static std::string arrayToString(T array[], size_t len, size_t fill = 2)
