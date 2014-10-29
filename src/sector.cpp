@@ -34,12 +34,26 @@ Block	&Sector::operator[](size_t block)
 
 void	Sector::setKeyA(uint8_t keyA[6])
 {
-	(void)keyA;
+	Block	tmp;
+
+	tmp = m_data[size() - 1];
+	for (size_t i = 0; i < 6; ++i)
+		tmp[i] = keyA[i];
+	m_state = Sector::MODIFIED;
+	if (!m_keyB)
+		setAuthentificationKey(keyA);
 }
 
 void	Sector::setKeyB(uint8_t keyB[6])
 {
-	(void)keyB;
+	Block	tmp;
+
+	tmp = m_data[size() - 1];
+	for (size_t	i = 6; i >= 0; --i)
+		tmp[tmp.size() - 1 - i] = keyB[i];
+	m_state = Sector::MODIFIED;
+	if (m_keyB)
+		setAuthentificationKey(keyB);
 }
 
 void	Sector::setPermissions(Sector::Flag permissions)
