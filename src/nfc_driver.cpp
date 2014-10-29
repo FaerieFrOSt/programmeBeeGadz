@@ -87,7 +87,7 @@ bool    NfcDevice::mifareCmd(mifare_cmd cmd, size_t sector, mifare_param *param)
 	return nfc_initiator_mifare_cmd(m_device, cmd, sector, param);
 }
 
-bool    NfcDevice::findCard(uint8_t uid[8], size_t len)
+bool    NfcDevice::findCard(const uint8_t uid[8], size_t len)
 {
 	static const nfc_modulation nmMifare = {
 		.nmt = NMT_ISO14443A,

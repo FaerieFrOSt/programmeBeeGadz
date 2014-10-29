@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/19 22:30:28 by availlan          #+#    #+#             */
-/*   Updated: 2014/10/26 14:36:48 by availlan         ###   ########.fr       */
+/*   Updated: 2014/10/29 17:30:38 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,17 @@ class   Printer
 	bool	isDebug() const;
 
 	template<typename T>
-	static std::string arrayToString(T array[], size_t len, size_t fill = 2)
+	static std::string	valueToString(const T &value, bool hex = false)
+	{
+		std::stringstream	oss("");
+		if (hex)
+			oss << std::hex;
+		oss << value;
+		return oss.str();
+	}
+
+	template<typename T>
+	static std::string	arrayToString(const T array[], size_t len, size_t fill = 2)
 	{
 		std::stringstream  oss("");
 		oss << std::hex << std::setfill('0');

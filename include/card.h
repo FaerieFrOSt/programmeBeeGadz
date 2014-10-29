@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/19 23:08:09 by availlan          #+#    #+#             */
-/*   Updated: 2014/10/27 16:47:53 by availlan         ###   ########.fr       */
+/*   Updated: 2014/10/29 17:47:18 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,57 +19,49 @@
 #include "mifare.h"
 #include "print_driver.h"
 #include <functional>
-
-#define sizeBlock 16
+#include <memory>
+#include "sector.h"
+#include <vector>
 
 class   Card
 {
 	public:
 	Card(void* device, Printer *print, nfc_target target); // Throws an exception when there is an error
-	~Card();
-	Card(const Card&) = delete;
-	Card&	operator=(const Card&) = delete;
+	Card(const Card&);
+	Card&	operator=(const Card&);
 
-	bool		read();
-	uint8_t		**read(size_t sector); //sends back a copy of the actual data. the user should delete it if not needed. You can use the provided static function Card::deleteSector(uint8_t**)
-	bool		write(size_t sector, uint8_t *data, size_t len);
-	bool		write();
+	bool		readAllCard();
+	bool		readSector(size_t sector);
 
-	static void	deleteSector(uint8_t **sector);
+	bool		writeSector(size_t sector);
+	bool		writeAllCard();
 
-	void		setKeyB(bool keyB);
-
+	Sector		&operator[](size_t sector);
 	bool		operator==(Card &other);
 	bool		operator!=(Card &other);
 
 	enum		Type { MifareClassic = 0x4, };
 
 	private:
-	enum		State { CLEAN, DIRTY, MODIFIED, };
+	bool		    readMifareClassic(size_t sector);
+	bool			writeMifareClassic(size_t sector);
+	bool			authenticate(size_t sector);
 
-	static const uint8_t    m_keys[];
-
-	bool    readMifareClassic(size_t sector);
-	bool	writeMifareClassic(size_t sector);
-	bool    authenticate(size_t sector);
-
-	bool    readData(size_t sector);
-	bool    writeData(size_t sector);
-	uint8_t	*getUid();
+	bool			readData(size_t sector);
+	bool			writeData(size_t sector);
+	const uint8_t	*getUid() const;
+	size_t			calculateBlock(size_t sector) const;
 
 	nfc_target					m_target;
 	mifare_param				m_param;
 	Type						m_type;
 	Printer						*m_print;
 	void						*m_device;
-	uint8_t						***m_data;
-	State					    *m_sectorState;
+	std::vector<Sector>			m_data;
 	size_t						m_uidLen;
 	size_t						m_nbSectors;
-	size_t						m_sectorLen;
 	std::function<bool(size_t)>	m_readCard;
 	std::function<bool(size_t)>	m_writeCard;
-	bool						m_keyB;
 };
 
 #endif /* !CARD_H */
