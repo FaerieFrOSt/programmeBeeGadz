@@ -86,6 +86,16 @@ Sector::State	Sector::getState() const
 	return m_state;
 }
 
+bool	Sector::verifyBCC() const
+{
+	Block	tmp;
+
+	if (!m_isTrailer)
+		return true;
+	tmp = m_data[0];
+	return tmp[0] ^ tmp[1] ^ tmp[2] ^ tmp[3] ^ tmp[4] == 0x00;
+}
+
 void	Sector::setTrailer(bool isTrailer)
 {
 	m_isTrailer = isTrailer;
