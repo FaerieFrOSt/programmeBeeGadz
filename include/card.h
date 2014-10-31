@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/19 23:08:09 by availlan          #+#    #+#             */
-/*   Updated: 2014/10/29 17:47:18 by availlan         ###   ########.fr       */
+/*   Updated: 2014/10/31 19:03:33 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,9 @@ class   Card
 	bool		operator==(Card &other);
 	bool		operator!=(Card &other);
 
+	const uint8_t	*getUid() const;
+	size_t			sizeUid() const;
+
 	enum		Type { MifareClassic = 0x4, };
 
 	private:
@@ -49,9 +52,10 @@ class   Card
 
 	bool			readData(size_t sector);
 	bool			writeData(size_t sector);
-	const uint8_t	*getUid() const;
 	size_t			calculateBlock(size_t sector) const;
 
+
+	const static uint8_t		m_keys[];
 	nfc_target					m_target;
 	mifare_param				m_param;
 	Type						m_type;
@@ -62,6 +66,7 @@ class   Card
 	size_t						m_nbSectors;
 	std::function<bool(size_t)>	m_readCard;
 	std::function<bool(size_t)>	m_writeCard;
+	const static size_t			m_nbKeys;
 };
 
 #endif /* !CARD_H */

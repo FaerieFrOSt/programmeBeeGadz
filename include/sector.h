@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/27 18:47:04 by availlan          #+#    #+#             */
-/*   Updated: 2014/10/30 11:29:14 by availlan         ###   ########.fr       */
+/*   Updated: 2014/10/31 17:54:03 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ class	Sector
 		bool			keyB() const;
 		const uint8_t	*authentificationKey() const;
 		size_t			size() const;
-		bool			verifyBCC() const
+		bool			verifyBCC() const;
 
 		State	getState() const;
 		void	setState(State state);

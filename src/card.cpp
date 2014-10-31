@@ -3,6 +3,20 @@
 #include "nfc_driver.h"
 #include <exception>
 
+const uint8_t	Card::m_keys[] = 
+{
+	0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+	0xd3, 0xf7, 0xd3, 0xf7, 0xd3, 0xf7,
+	0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5,
+	0xb0, 0xb1, 0xb2, 0xb3, 0xb4, 0xb5,
+	0x4d, 0x3a, 0x99, 0xc3, 0x51, 0xdd,
+	0x1a, 0x98, 0x2c, 0x7e, 0x45, 0x9a,
+	0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+	0xab, 0xcd, 0xed, 0x12, 0x34, 0x56,
+};
+const size_t	Card::m_nbKeys = 9;
+
 Card::Card(void *device, Printer *print, nfc_target target) : m_print(print), m_device(device)
 {
 	std::memcpy(&m_target, &target, sizeof(m_target));
@@ -31,6 +45,7 @@ Card::Card(void *device, Printer *print, nfc_target target) : m_print(print), m_
 }
 
 Card::Card(const Card &other) : m_print(other.m_print), m_device(other.m_device)
+
 {
 	std::memcpy(&m_target, &other.m_target, sizeof(m_target));
 	if (!m_print || !m_device)
@@ -105,24 +120,16 @@ bool    Card::operator!=(Card &other)
 	return !(*this == other);
 }
 
+size_t	Card::sizeUid() const
+{
+	return m_uidLen;
+}
+
 bool	Card::readAllCard()
 {
 	for (size_t i = 0; i < m_data.size(); ++i)
 		if (!readSector(i))
 			return false;
-	if (m_print->isDebug())
-	{
-		m_print->printDebug("Data on card " + Printer::arrayToString<uint8_t>(getUid(), m_uidLen) + " :");
-		for (auto &sector : m_data)
-		{
-			m_print->printDebug("Data on sector " + Printer::valueToString<size_t>(&sector - &m_data[0], true) + " :");
-			for (auto &i : sector)
-			{
-				m_print->printDebug("Block " + Printer::valueToString<size_t>(&i - &sector[0], true));
-				m_print->printDebug(Printer::arrayToString<uint8_t>(i.data(), i.size()));
-			}
-		}
-	}
 	return true;
 }
 
@@ -162,20 +169,27 @@ bool	Card::authenticate(size_t sector)
 	NfcDevice       *device;
 
 	device = static_cast<NfcDevice*>(m_device);
-	m_print->printDebug("Trying to authenticate sector " + Printer::arrayToString<size_t>(&sector, 1) + " on card " + Printer::arrayToString<uint8_t>(getUid(), m_uidLen));
-	std::memcpy(m_param.mpa.abtKey, m_data[sector].authentificationKey(), 6);
-	m_print->printDebug("Trying with key " + Printer::arrayToString<uint8_t>(m_param.mpa.abtKey, 6) + " on key " + std::string(m_data[sector].keyB() ? "B" : "A"));
-	res = device->mifareCmd(m_data[sector].keyB() ? MC_AUTH_B : MC_AUTH_A, calculateBlock(sector), &m_param);
-	if (res)
+	std::memcpy(m_param.mpa.abtAuthUid, getUid(), m_uidLen);
+	m_print->printDebug("Trying to authenticate sector " + Printer::arrayToString<size_t>(&sector, 1) + " on card " + Printer::arrayToString<uint8_t>(m_param.mpa.abtAuthUid, m_uidLen));
+	size_t	i = 0;
+	do
 	{
-		m_print->printDebug("Authenticated normaly");
-		return true;
-	}
-	else if (!device->findCard(getUid(), m_uidLen))
-	{
-		m_print->printError("The tag was removed !");
-		return false;
-	}
+		std::memcpy(m_param.mpa.abtKey, m_data[sector].authentificationKey(), 6);
+		m_print->printDebug("Trying with key " + Printer::arrayToString<uint8_t>(m_param.mpa.abtKey, 6) + " on key " + std::string(m_data[sector].keyB() ? "B" : "A"));
+		res = device->mifareCmd(m_data[sector].keyB() ? MC_AUTH_B : MC_AUTH_A, calculateBlock(sector), &m_param);
+		if (res)
+		{
+			m_print->printDebug("Authenticated normaly");
+			return true;
+		}
+		else if (!device->findCard(getUid(), m_uidLen))
+		{
+			m_print->printError("The tag was removed !");
+			return false;
+		}
+		m_data[sector].setAuthentificationKey(&m_keys[i]);
+		i += 6;
+	}while (i < m_nbKeys * 6);
 	m_print->printError("Error while trying to authenticate sector " + Printer::valueToString<size_t>(sector, true));
 	return false;
 }
@@ -228,9 +242,7 @@ bool	Card::readMifareClassic(size_t sector)
 
 bool    Card::writeSector(size_t sector)
 {
-	if (!m_writeCard(sector))
-		return false;
-	return true;
+	return m_writeCard(sector);
 }
 
 bool    Card::writeData(size_t sector)

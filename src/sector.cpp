@@ -29,6 +29,7 @@ Sector	&Sector::operator=(const Sector &other)
 
 Block	&Sector::operator[](size_t block)
 {
+	m_state = Sector::MODIFIED;
 	return m_data[block];
 }
 
@@ -49,8 +50,9 @@ void	Sector::setKeyB(uint8_t keyB[6])
 	Block	tmp;
 
 	tmp = m_data[size() - 1];
-	for (size_t	i = 6; i >= 0; --i)
+	for (size_t	i = 6; i > 0; --i)
 		tmp[tmp.size() - 1 - i] = keyB[i];
+	tmp[tmp.size() - 1] = keyB[0];
 	m_state = Sector::MODIFIED;
 	if (m_keyB)
 		setAuthentificationKey(keyB);
@@ -93,7 +95,7 @@ bool	Sector::verifyBCC() const
 	if (!m_isTrailer)
 		return true;
 	tmp = m_data[0];
-	return tmp[0] ^ tmp[1] ^ tmp[2] ^ tmp[3] ^ tmp[4] == 0x00;
+	return (tmp[0] ^ tmp[1] ^ tmp[2] ^ tmp[3] ^ tmp[4]) == 0x00;
 }
 
 void	Sector::setTrailer(bool isTrailer)
