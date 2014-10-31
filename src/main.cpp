@@ -9,6 +9,6 @@ int main()
 	Card		*tmp = nullptr;
 
 	tmp = nfc.findCard();
-	tmp->readAllCard();
+	tmp->readSector(1);
 	return 0;
 }
