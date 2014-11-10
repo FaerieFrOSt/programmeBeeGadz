@@ -14,13 +14,17 @@ PREFIX = .
 
 EXE = a.out
 
+LIBMYSQL = $(shell mysql_config --libs)
+
+MYSQLFLAGS = $(shell mysql_config --cflags)
+
 LIBNFC = $(PREFIX)/libnfc/libnfc.a
 
 INC = -I$(PREFIX)/libnfc -I$(PREFIX)/include
 
-CFLAGS = -g -Wall -Werror -Wextra -std=c++11
+CFLAGS = -g -Wall -Werror -Wextra -std=c++11 $(MYSQLFLAGS)
 
-LIB = $(LIBNFC) -lusb
+LIB = $(LIBNFC) -lusb $(LIBMYSQL)
 
 SRCDIR = $(PREFIX)/src
 

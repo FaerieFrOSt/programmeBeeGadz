@@ -105,7 +105,7 @@ nfc_initiator_mifare_cmd(nfc_device *pnd, const mifare_cmd mc, const uint8_t ui8
   // FIXME: Save and restore bEasyFraming
   // bEasyFraming = nfc_device_get_property_bool (pnd, NP_EASY_FRAMING, &bEasyFraming);
   if (nfc_device_set_property_bool(pnd, NP_EASY_FRAMING, true) < 0) {
-    /* nfc_perror(pnd, "nfc_device_set_property_bool"); */
+    nfc_perror(pnd, "nfc_device_set_property_bool");
     return false;
   }
   // Fire the mifare command
@@ -117,7 +117,7 @@ nfc_initiator_mifare_cmd(nfc_device *pnd, const mifare_cmd mc, const uint8_t ui8
       // is not permitted by current acces bytes;
       // So there is nothing to do here.
     } else {
-      /* nfc_perror(pnd, "nfc_initiator_transceive_bytes"); */
+      nfc_perror(pnd, "nfc_initiator_transceive_bytes");
     }
     // XXX nfc_device_set_property_bool (pnd, NP_EASY_FRAMING, bEasyFraming);
     return false;

@@ -1,5 +1,30 @@
 #include "sector.h"
 #include <cstring>
+#include <bitset>
+
+const uint16_t	Sector::m_accessTrailer[8] = 
+{
+	Sector::A_W_A | Sector::A_R_C | Sector::A_R_B | Sector::A_W_B,
+	Sector::A_W_A | Sector::A_R_C | Sector::A_W_C | Sector::A_R_B | Sector::A_W_B,
+	Sector::A_R_C | Sector::A_R_B,
+	Sector::B_W_A | Sector::A_R_C | Sector::B_R_C | Sector::B_W_C | Sector::B_W_B,
+	Sector::B_W_A | Sector::A_R_C | Sector::B_R_C | Sector::B_W_B,
+	Sector::A_R_C | Sector::B_R_C | Sector::B_W_C,
+	Sector::A_R_C | Sector::B_R_C,
+	Sector::A_R_C | Sector::B_R_C,
+};
+
+const uint8_t	Sector::m_accessBlock[8] =
+{
+	Sector::A_R | Sector::B_R | Sector::A_W | Sector::B_W | Sector::A_I | Sector::B_I | Sector::A_D | Sector::B_D,
+	Sector::A_R | Sector::B_R | Sector::A_D | Sector::B_D,
+	Sector::A_R | Sector::B_R,
+	Sector::B_R | Sector::B_W,
+	Sector::A_R | Sector::B_R | Sector::B_W,
+	Sector::B_R,
+	Sector::A_R | Sector::B_R | Sector::B_W | Sector::B_I | Sector::A_D | Sector::B_D,
+	0,
+};
 
 Sector::Sector(bool isTrailer, size_t nbBlock, bool keyB) :
 	m_data(nbBlock), m_state(Sector::DIRTY), m_isTrailer(isTrailer), m_keyB(keyB)
@@ -58,9 +83,62 @@ void	Sector::setKeyB(uint8_t keyB[6])
 		setAuthentificationKey(keyB);
 }
 
-void	Sector::setPermissions(Sector::Flag permissions)
+bool	Sector::setPermissions(size_t block, Sector::Flag permissions)
 {
-	(void)permissions;
+	if (block == m_data.size() - 1 && permissions & Sector::B_I)
+		return false;
+	else if (block != m_data.size() - 1 && (permissions & Sector::A_W_A || permissions & Sector::B_W_A))
+		return false;
+	if (block >= m_data.size())
+		return false;
+	std::vector<uint16_t>	tab;
+	if (block == m_data.size() - 1)
+	{
+		for (auto &i : m_accessTrailer)
+			if (i == permissions)
+				tab.push_back(&i - &m_accessTrailer[0]);
+	}else
+	{
+		for (auto &i : m_accessBlock)
+			if (i == permissions)
+				tab.push_back(&i - &m_accessBlock[0]);
+	}
+	if (tab.size() != 1)
+		return false;
+	std::bitset<3>	bits(tab[0]);
+	Block	*tmp = &m_data[m_data.size() - 1];
+	if (m_data.size() > 4)
+	{
+		if (block < 5)
+			block = 0;
+		else if (block < 10)
+			block = 1;
+		else if (block < 15)
+			block = 2;
+		else block = 3;
+	}
+	for (size_t i = 6; i < 9; ++i)
+	{
+		std::bitset<8>	uchar((*tmp)[i]);
+		switch (i)
+		{
+			case 6:
+				uchar[block] = ~bits[2];
+				uchar[block + 4] = ~bits[1];
+				break;
+			case 7:
+				uchar[block] = ~bits[0];
+				uchar[block + 4] = bits[2];
+				break;
+			case 8:
+				uchar[block] = bits[1];
+				uchar[block + 4] = bits[0];
+				break;
+		}
+		(*tmp)[i] = (uint8_t)uchar.to_ulong();
+	}
+	m_state = Sector::MODIFIED;
+	return true;
 }
 
 void	Sector::useKeyB(bool keyB)

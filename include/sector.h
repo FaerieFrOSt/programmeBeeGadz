@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/27 18:47:04 by availlan          #+#    #+#             */
-/*   Updated: 2014/10/31 17:54:03 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/01 16:56:02 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,20 +31,31 @@ class	Sector
 
 		enum	Flag
 		{
-			READ = 0x1,
-			WRITE = 0x2,
-			USE_KEYA = 0x4,
-			USE_KEYB = 0x8,
-			NONE = 0x10,
-			ACCESS_KEYA = 0x20,
-			ACCESS_KEYB = 0x40,
-			BITS = 0x80,
+			//Trailer block access bits
+			A_W_A = 1 << 9,
+			B_W_A = 1 << 8,
+			A_R_C = 1 << 7,
+			B_R_C = 1 << 6,
+			A_W_C = 1 << 5,
+			B_W_C = 1 << 4,
+			A_R_B = 1 << 3,
+			A_W_B = 1 << 1,
+			B_W_B = 1 << 0,
+			//Normal block access bits
+			A_R = 1 << 7,
+			B_R = 1 << 6,
+			A_W = 1 << 5,
+			B_W = 1 << 4,
+			A_I = 1 << 3,
+			B_I = 1 << 2,
+			A_D = 1 << 1,
+			B_D = 1 << 0,
 		};
 
 		void			setTrailer(bool trailer);
 		void			setKeyA(uint8_t keyA[6]);
 		void			setKeyB(uint8_t keyB[6]);
-		void			setPermissions(Flag permissions);
+		bool			setPermissions(size_t block, Flag permissions);
 		void			useKeyB(bool keyB);
 		void			setAuthentificationKey(const uint8_t *key);
 
@@ -67,6 +78,8 @@ class	Sector
 		State					m_state;
 		bool					m_isTrailer;
 		bool					m_keyB;
+		const static uint16_t	m_accessTrailer[8];
+		const static uint8_t	m_accessBlock[8];
 };
 
 #endif /* !SECTOR_H */

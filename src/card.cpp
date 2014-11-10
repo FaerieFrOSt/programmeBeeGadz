@@ -213,7 +213,7 @@ bool    Card::readData(size_t sector)
 				m_print->printError("The tag was removed !");
 				return false;
 			}
-			m_print->printError("Error while reading sector " + Printer::valueToString<size_t>(sector, true));
+			m_print->printError("Error while reading block " + Printer::valueToString<size_t>(tmp, true));
 			return false;
 		}else
 			std::memcpy(i.data(), m_param.mpd.abtData, i.size());
