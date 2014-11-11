@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/27 18:47:04 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/01 16:56:02 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/11 19:17:34 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ class	Sector
 		void			setKeyA(uint8_t keyA[6]);
 		void			setKeyB(uint8_t keyB[6]);
 		bool			setPermissions(size_t block, Flag permissions);
+		bool			setPermissions(size_t block, bool C1, bool C2, bool C3);
 		void			useKeyB(bool keyB);
 		void			setAuthentificationKey(const uint8_t *key);
 

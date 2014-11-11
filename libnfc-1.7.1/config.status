@@ -437,7 +437,7 @@ Copyright (C) 2012 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/faerie/C++/ProgrammeBeeGadz/libnfc-1.7.1'
+ac_pwd='/home/faerie/C++/prog/libnfc-1.7.1'
 srcdir='.'
 INSTALL='/usr/bin/install -c'
 MKDIR_P='/bin/mkdir -p'
@@ -572,7 +572,7 @@ FGREP='/bin/grep -F'
 LD='/usr/bin/ld'
 NM='/usr/bin/nm -B'
 LN_S='ln -s'
-max_cmd_len='1572864'
+max_cmd_len='805306365'
 ac_objext='o'
 exeext=''
 lt_unset='unset'
@@ -956,12 +956,12 @@ S["mkdir_p"]="/bin/mkdir -p"
 S["MKDIR_P"]="/bin/mkdir -p"
 S["INSTALL_STRIP_PROGRAM"]="$(install_sh) -c -s"
 S["STRIP"]="strip"
-S["install_sh"]="${SHELL} /home/faerie/C++/ProgrammeBeeGadz/libnfc-1.7.1/install-sh"
-S["MAKEINFO"]="${SHELL} /home/faerie/C++/ProgrammeBeeGadz/libnfc-1.7.1/missing --run makeinfo"
-S["AUTOHEADER"]="${SHELL} /home/faerie/C++/ProgrammeBeeGadz/libnfc-1.7.1/missing --run autoheader"
-S["AUTOMAKE"]="${SHELL} /home/faerie/C++/ProgrammeBeeGadz/libnfc-1.7.1/missing --run automake-1.11"
-S["AUTOCONF"]="${SHELL} /home/faerie/C++/ProgrammeBeeGadz/libnfc-1.7.1/missing --run autoconf"
-S["ACLOCAL"]="${SHELL} /home/faerie/C++/ProgrammeBeeGadz/libnfc-1.7.1/missing --run aclocal-1.11"
+S["install_sh"]="${SHELL} /home/faerie/C++/prog/libnfc-1.7.1/install-sh"
+S["MAKEINFO"]="${SHELL} /home/faerie/C++/prog/libnfc-1.7.1/missing --run makeinfo"
+S["AUTOHEADER"]="${SHELL} /home/faerie/C++/prog/libnfc-1.7.1/missing --run autoheader"
+S["AUTOMAKE"]="${SHELL} /home/faerie/C++/prog/libnfc-1.7.1/missing --run automake-1.11"
+S["AUTOCONF"]="${SHELL} /home/faerie/C++/prog/libnfc-1.7.1/missing --run autoconf"
+S["ACLOCAL"]="${SHELL} /home/faerie/C++/prog/libnfc-1.7.1/missing --run aclocal-1.11"
 S["VERSION"]="1.7.1"
 S["PACKAGE"]="libnfc"
 S["CYGPATH_W"]="echo"

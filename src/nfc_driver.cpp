@@ -26,6 +26,7 @@ NfcDevice::NfcDevice(Printer *print) : m_device(nullptr), m_print(print), m_isIn
 			throw std::exception();
 		}
 	}
+	m_print->printDebug(nfc_version());
 	m_print->printDebug("Openning device");
 	m_device = nfc_open(m_context, nullptr);
 	if (!m_device)
@@ -82,9 +83,12 @@ Card	*NfcDevice::findCard()
 	return nullptr;
 }
 
-bool    NfcDevice::mifareCmd(mifare_cmd cmd, size_t sector, mifare_param *param)
+bool    NfcDevice::mifareCmd(mifare_cmd cmd, size_t block, mifare_param *param)
 {
-	return nfc_initiator_mifare_cmd(m_device, cmd, sector, param);
+	if (nfc_initiator_mifare_cmd(m_device, cmd, block, param))
+		return true;
+	nfc_perror(m_device, "nfc error : ");
+	return false;
 }
 
 bool    NfcDevice::findCard(const uint8_t uid[8], size_t len)

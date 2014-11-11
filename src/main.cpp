@@ -1,16 +1,20 @@
-#include <unordered_set>
-#include <string>
-#include <cstring>
-#include "application.h"
+#include "print_driver.h"
+#include "nfc_driver.h"
+#include "card.h"
 
-int	main(int argc, char **argv)
+int	main()
 {
-	bool	debug = false;
-	std::unordered_set<std::string>	args;
-	for (int i = 0; i < argc; ++i)
-		args.insert(std::string(argv[i], strlen(argv[i])));
-	if (args.find("-d") != args.end())
-		debug = true;
-	Application app(debug, argv[0]);
-	return app.run();
+	Printer		p(true);
+	NfcDevice	device(&p);
+	Card		*card;
+	/* uint8_t		key[] = {0xe3, 0x22, 0x9a, 0x12, 0x6f, 0x10}; */
+
+	card = device.findCard();
+	card->readSector(1);
+	/* (*card)[1][0][0] = 0xcc; */
+	/* (*card)[1].useKeyB(true); */
+	/* (*card)[1].setKeyB(key); */
+	/* (*card)[1].setPermissions(3, 0, 1, 1); */
+	/* card->writeSector(1); */
+	return 0;
 }

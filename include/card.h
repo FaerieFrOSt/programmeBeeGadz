@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/19 23:08:09 by availlan          #+#    #+#             */
-/*   Updated: 2014/10/31 19:03:33 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/11 21:29:34 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,12 @@ class   Card
 	private:
 	bool		    readMifareClassic(size_t sector);
 	bool			writeMifareClassic(size_t sector);
-	bool			authenticate(size_t sector);
+	bool			authenticate(size_t block);
 
-	bool			readData(size_t sector);
-	bool			writeData(size_t sector);
+	bool			readData(size_t block);
+	bool			writeData(size_t block);
 	size_t			calculateBlock(size_t sector) const;
+	size_t			calculateSector(size_t block, size_t *nb = nullptr) const;
 
 
 	const static uint8_t		m_keys[];

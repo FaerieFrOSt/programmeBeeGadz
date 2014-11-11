@@ -65,6 +65,7 @@ void	Sector::setKeyA(uint8_t keyA[6])
 	tmp = m_data[size() - 1];
 	for (size_t i = 0; i < 6; ++i)
 		tmp[i] = keyA[i];
+	m_data[size() - 1] = tmp;
 	m_state = Sector::MODIFIED;
 	if (!m_keyB)
 		setAuthentificationKey(keyA);
@@ -75,12 +76,53 @@ void	Sector::setKeyB(uint8_t keyB[6])
 	Block	tmp;
 
 	tmp = m_data[size() - 1];
-	for (size_t	i = 6; i > 0; --i)
-		tmp[tmp.size() - 1 - i] = keyB[i];
-	tmp[tmp.size() - 1] = keyB[0];
+	for (size_t	i = 0; i < 6 ; ++i)
+		tmp[tmp.size() - 1 - i] = keyB[5 - i];
+	m_data[size() - 1] = tmp;
 	m_state = Sector::MODIFIED;
 	if (m_keyB)
 		setAuthentificationKey(keyB);
+}
+
+bool	Sector::setPermissions(size_t block, bool C1, bool C2, bool C3)
+{
+	std::bitset<3>	bits;
+	bits[0] = C1;
+	bits[1] = C2;
+	bits[2] = C3;
+	Block	*tmp = &m_data[m_data.size() - 1];
+	if (m_data.size() > 4)
+	{
+		if (block < 5)
+			block = 0;
+		else if (block < 10)
+			block = 1;
+		else if (block < 15)
+			block = 2;
+		else block = 3;
+	}
+	for (size_t i = 6; i < 9; ++i)
+	{
+		std::bitset<8>	uchar((*tmp)[i]);
+		switch (i)
+		{
+			case 6:
+				uchar[block] = ~bits[2];
+				uchar[block + 4] = ~bits[1];
+				break;
+			case 7:
+				uchar[block] = ~bits[0];
+				uchar[block + 4] = bits[2];
+				break;
+			case 8:
+				uchar[block] = bits[1];
+				uchar[block + 4] = bits[0];
+				break;
+		}
+		(*tmp)[i] = (uint8_t)uchar.to_ulong();
+	}
+	m_state = Sector::MODIFIED;
+	return true;
 }
 
 bool	Sector::setPermissions(size_t block, Sector::Flag permissions)

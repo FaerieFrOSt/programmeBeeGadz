@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/17 01:17:22 by availlan          #+#    #+#             */
-/*   Updated: 2014/10/31 18:47:38 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/11 19:37:46 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ class   NfcDevice
 	NfcDevice&	operator=(const NfcDevice&) = delete;
 
 	bool	infiniteSelect(bool infinite);
-	bool	mifareCmd(mifare_cmd key, size_t sector, mifare_param *param);
+	bool	mifareCmd(mifare_cmd key, size_t block, mifare_param *param);
 	Card	*findCard();
 	bool	findCard(const uint8_t uid[8], size_t len);
 
