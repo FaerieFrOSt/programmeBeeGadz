@@ -1,11 +1,16 @@
-#include <Python.h>
+#include <unordered_set>
+#include <string>
+#include <cstring>
+#include "application.h"
 
 int	main(int argc, char **argv)
 {
-	Py_SetProgramName(argv[0]);
-	Py_Initialize();
-	PyRun_SimpleString("from time import time, ctime\n"
-						"print 'Today is', ctime(time())\n");
-	Py_Finalize();
-	return 0;
+	bool	debug = false;
+	std::unordered_set<std::string>	args;
+	for (int i = 0; i < argc; ++i)
+		args.insert(std::string(argv[i], strlen(argv[i])));
+	if (args.find("-d") != args.end())
+		debug = true;
+	Application app(debug, argv[0]);
+	return app.run();
 }

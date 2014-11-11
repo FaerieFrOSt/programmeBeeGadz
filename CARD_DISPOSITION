@@ -1,0 +1,5 @@
+sector 1 :
+	- what is the card (admin, selling card, debit card for this event, debit card for an other event, ...)
+
+sector 2 :
+	- if it's a debit card, the montant on it
