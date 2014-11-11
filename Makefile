@@ -14,6 +14,12 @@ PREFIX = .
 
 EXE = a.out
 
+PYTHONFLAGS = $(shell python2.7-config --cflags)
+
+PYTHONFLAGS := $(filter-out -Wstrict-prototypes, $(PYTHONFLAGS))
+
+LIBPYTHON = $(shell python2.7-config --ldflags)
+
 LIBMYSQL = $(shell mysql_config --libs)
 
 MYSQLFLAGS = $(shell mysql_config --cflags)
@@ -22,9 +28,9 @@ LIBNFC = $(PREFIX)/libnfc/libnfc.a
 
 INC = -I$(PREFIX)/libnfc -I$(PREFIX)/include
 
-CFLAGS = -g -Wall -Werror -Wextra -std=c++11 $(MYSQLFLAGS)
+CFLAGS = -g -Wall -Werror -Wextra -std=c++11 $(MYSQLFLAGS) $(PYTHONFLAGS)
 
-LIB = $(LIBNFC) -lusb $(LIBMYSQL)
+LIB = $(LIBNFC) -lusb $(LIBMYSQL) $(LIBPYTHON)
 
 SRCDIR = $(PREFIX)/src
 
