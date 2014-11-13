@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/27 18:49:30 by availlan          #+#    #+#             */
-/*   Updated: 2014/10/28 18:52:58 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/13 19:44:03 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,14 @@ class	Block
 		std::array<uint8_t, 16>::const_iterator	cbegin();
 		std::array<uint8_t, 16>::const_iterator	cend();
 
+		enum	State { CLEAN, DIRTY, MODIFIED, };
+
+		State									getState() const;
+		void									setState(State state);
+
 	private:
 		std::array<uint8_t, 16>	m_data;
+		State					m_state;
 };
 
 #endif /* !BLOCK_H */

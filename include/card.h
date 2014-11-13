@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/19 23:08:09 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/11 21:29:34 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/13 22:06:23 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,10 @@
 #include <memory>
 #include "sector.h"
 #include <vector>
+
+// BE AWARE THAN KEY A IN EACH SECTOR IS SET TO 0xFF 0xFF 0xFF 0xFF 0xFF 0xFF
+// SO IF YOU DONT WANT TO CHANGE IT BE SURE TO WRITE IT INSIDE BLOCK 3 OF EACH SECTOR BEFORE WRITING
+// THE BLOCK 3 BACK TO THE CARD
 
 class   Card
 {

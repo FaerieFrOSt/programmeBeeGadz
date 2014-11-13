@@ -1,6 +1,6 @@
 #include "block.h"
 
-Block::Block(uint8_t *data)
+Block::Block(uint8_t *data) : m_state(Block::DIRTY)
 {
 	if (!data)
 	{
@@ -11,7 +11,7 @@ Block::Block(uint8_t *data)
 		i = data[&i - &m_data[0]];
 }
 
-Block::Block(const Block &other)
+Block::Block(const Block &other) : m_state(other.m_state)
 {
 	for (auto &i : m_data)
 		i = other.m_data[&i - &m_data[0]];
@@ -19,6 +19,7 @@ Block::Block(const Block &other)
 
 Block	&Block::operator=(const Block &other)
 {
+	m_state = other.m_state;
 	for (auto &i : m_data)
 		i = other.m_data[&i - &m_data[0]];
 	return *this;
@@ -26,6 +27,7 @@ Block	&Block::operator=(const Block &other)
 
 uint8_t	&Block::operator[](size_t block)
 {
+	m_state = Block::MODIFIED;
 	return m_data[block];
 }
 
@@ -56,5 +58,15 @@ uint8_t	*Block::data()
 
 size_t	Block::size() const
 {
-	return 16;
+	return m_data.size();
+}
+
+Block::State	Block::getState() const
+{
+	return m_state;
+}
+
+void	Block::setState(Block::State state)
+{
+	m_state = state;
 }

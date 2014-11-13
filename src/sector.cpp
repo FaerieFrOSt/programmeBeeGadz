@@ -27,13 +27,13 @@ const uint8_t	Sector::m_accessBlock[8] =
 };
 
 Sector::Sector(bool isTrailer, size_t nbBlock, bool keyB) :
-	m_data(nbBlock), m_state(Sector::DIRTY), m_isTrailer(isTrailer), m_keyB(keyB)
+	m_data(nbBlock), m_isTrailer(isTrailer), m_keyB(keyB)
 {
 	m_key.fill(0xff);
 	m_data.shrink_to_fit();
 }
 
-Sector::Sector(const Sector &other) : m_data(other.m_data), m_state(other.m_state),
+Sector::Sector(const Sector &other) : m_data(other.m_data),
 	m_isTrailer(other.m_isTrailer), m_keyB(other.m_keyB)
 {
 	for (auto &i : m_key)
@@ -44,7 +44,6 @@ Sector::Sector(const Sector &other) : m_data(other.m_data), m_state(other.m_stat
 Sector	&Sector::operator=(const Sector &other)
 {
 	m_isTrailer = other.m_isTrailer;
-	m_state = other.m_state;
 	m_data = other.m_data;
 	m_data.shrink_to_fit();
 	for (auto &i : m_key)
@@ -54,7 +53,6 @@ Sector	&Sector::operator=(const Sector &other)
 
 Block	&Sector::operator[](size_t block)
 {
-	m_state = Sector::MODIFIED;
 	return m_data[block];
 }
 
@@ -66,7 +64,6 @@ void	Sector::setKeyA(uint8_t keyA[6])
 	for (size_t i = 0; i < 6; ++i)
 		tmp[i] = keyA[i];
 	m_data[size() - 1] = tmp;
-	m_state = Sector::MODIFIED;
 	if (!m_keyB)
 		setAuthentificationKey(keyA);
 }
@@ -79,7 +76,6 @@ void	Sector::setKeyB(uint8_t keyB[6])
 	for (size_t	i = 0; i < 6 ; ++i)
 		tmp[tmp.size() - 1 - i] = keyB[5 - i];
 	m_data[size() - 1] = tmp;
-	m_state = Sector::MODIFIED;
 	if (m_keyB)
 		setAuthentificationKey(keyB);
 }
@@ -87,9 +83,9 @@ void	Sector::setKeyB(uint8_t keyB[6])
 bool	Sector::setPermissions(size_t block, bool C1, bool C2, bool C3)
 {
 	std::bitset<3>	bits;
-	bits[0] = C1;
+	bits[0] = C3;
 	bits[1] = C2;
-	bits[2] = C3;
+	bits[2] = C1;
 	Block	*tmp = &m_data[m_data.size() - 1];
 	if (m_data.size() > 4)
 	{
@@ -121,7 +117,6 @@ bool	Sector::setPermissions(size_t block, bool C1, bool C2, bool C3)
 		}
 		(*tmp)[i] = (uint8_t)uchar.to_ulong();
 	}
-	m_state = Sector::MODIFIED;
 	return true;
 }
 
@@ -179,7 +174,6 @@ bool	Sector::setPermissions(size_t block, Sector::Flag permissions)
 		}
 		(*tmp)[i] = (uint8_t)uchar.to_ulong();
 	}
-	m_state = Sector::MODIFIED;
 	return true;
 }
 
@@ -203,11 +197,6 @@ const uint8_t	*Sector::authentificationKey() const
 	return m_key.data();
 }
 
-Sector::State	Sector::getState() const
-{
-	return m_state;
-}
-
 bool	Sector::verifyBCC() const
 {
 	Block	tmp;
@@ -226,11 +215,6 @@ void	Sector::setTrailer(bool isTrailer)
 size_t	Sector::size() const
 {
 	return m_data.size();
-}
-
-void	Sector::setState(Sector::State state)
-{
-	m_state = state;
 }
 
 std::vector<Block>::iterator	Sector::begin()

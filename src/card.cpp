@@ -227,6 +227,7 @@ bool    Card::readData(size_t block)
 		return false;
 	}else
 		std::memcpy(m_data[sector][tmp].data(), m_param.mpd.abtData, m_data[sector][tmp].size());
+	m_data[sector][tmp].setState(Block::CLEAN);
 	return true;
 }
 
@@ -241,7 +242,6 @@ bool	Card::readMifareClassic(size_t sector)
 		++block;
 		(void)i;
 	}
-	m_data[sector].setState(Sector::CLEAN);
 	return true;
 }
 
@@ -283,14 +283,15 @@ bool	Card::writeAllCard()
 
 bool    Card::writeMifareClassic(size_t sector)
 {
-	if (m_data[sector].getState() == Sector::DIRTY || m_data[sector].getState() == Sector::CLEAN)
-	{
-		m_print->printError("Nothing to write to card");
-		return false;
-	}
 	size_t	block = calculateBlock(sector) - m_data[sector].size() + 1;
 	for (auto i : m_data[sector])
 	{
+		if (i.getState() == Block::CLEAN)
+		{
+			m_print->printDebug("Nothing to write on block " + Printer::valueToString<size_t>(block, true));
+			++block;
+			continue;
+		}
 		if (authenticate(block))
 			if (!writeData(block))
 				m_print->printError("Error while writing block " + Printer::valueToString<size_t>(block, true));

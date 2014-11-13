@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/27 18:47:04 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/11 19:17:34 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/13 19:46:08 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@ class	Sector
 		Sector	&operator=(const Sector&);
 
 		Block			&operator[](size_t block);
-
-		enum	State { CLEAN, DIRTY, MODIFIED, };
 
 		enum	Flag
 		{
@@ -65,9 +63,6 @@ class	Sector
 		size_t			size() const;
 		bool			verifyBCC() const;
 
-		State	getState() const;
-		void	setState(State state);
-
 		std::vector<Block>::iterator		begin();
 		std::vector<Block>::iterator		end();
 		std::vector<Block>::const_iterator	cbegin();
@@ -76,7 +71,6 @@ class	Sector
 	private:
 		std::vector<Block>		m_data;
 		std::array<uint8_t, 6>	m_key;
-		State					m_state;
 		bool					m_isTrailer;
 		bool					m_keyB;
 		const static uint16_t	m_accessTrailer[8];
