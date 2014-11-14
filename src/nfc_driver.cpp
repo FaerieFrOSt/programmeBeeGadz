@@ -65,21 +65,21 @@ NfcDevice::~NfcDevice()
 		nfc_exit(m_context);
 }
 
-Card	*NfcDevice::findCard()
+std::unique_ptr<Card>	NfcDevice::findCard(bool infinite)
 {
 	nfc_target	target;
 
-	infiniteSelect(true);
+	infiniteSelect(infinite);
 	m_print->printDebug("Searching for a card...");
 	if (nfc_initiator_select_passive_target(m_device, nmMifare, nullptr, 0, &target) > 0)
 	{
 		m_print->printDebug("Found NFC tag : ");
 		m_print->printDebug("UID : " + Printer::arrayToString<uint8_t>(target.nti.nai.abtUid, target.nti.nai.szUidLen));
 		m_print->printDebug("Type : " + Printer::arrayToString<uint8_t>(&target.nti.nai.abtAtqa[1], 1));
-		Card	*tmp = new Card(this, m_print, target);
-		return tmp;
+		std::unique_ptr<Card>	tmp(new Card(this, m_print, target));
+		return std::move(tmp);
 	}
-	m_print->printError("Error while searching for a card");
+	m_print->printDebug("No card present.");
 	return nullptr;
 }
 
