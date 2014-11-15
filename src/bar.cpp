@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/15 15:44:24 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/15 21:03:57 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/15 22:43:32 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ bool	Bar::run()
 				conso.first = "";
 				conso.second = 0.0f;
 				m_printer->printInfo("Time ellapsed, Command reset.");
+				m_printer->printInfo("Posez une carte.");
 				time = timer;
 			}
 			if (m_printer->keyPressed())
@@ -81,6 +82,7 @@ bool	Bar::run()
 			{
 				m_printer->printDebug("Argent sur la carte : " + Printer::valueToString<float>(getCredit(*card)));
 				m_printer->printInfo("Entrez d'abord la commande");
+				m_printer->printInfo("Posez une carte.");
 			}
 			else if (isDebit(*card) && conso.first != "")
 			{
@@ -99,15 +101,20 @@ bool	Bar::run()
 				conso.first = "";
 				conso.second = 0.0f;
 				time = timer;
+				m_printer->printInfo("Posez une carte.");
 			}
 			else if (isConso(*card))
 			{
 				conso = m_config->getConso(getConso(*card));
 				m_printer->printInfo("Commande : " + conso.first);
 				time = timer;
+				m_printer->printInfo("Posez une carte.");
 			}
 			else
+			{
 				m_printer->printError("Carte corrompue !");
+				m_printer->printInfo("Posez une carte.");
+			}
 		} catch (std::exception &e)
 		{}
 	}

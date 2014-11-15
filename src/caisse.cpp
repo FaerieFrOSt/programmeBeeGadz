@@ -43,8 +43,13 @@ bool	Caisse::run()
 				read = true;
 				m_printer->printInfo("Lecture terminée");
 			}
+			if (isAdmin(*card))
+				return true;
 			if (!isDebit(*card))
+			{
+				m_printer->printInfo("Création de la carte en cours");
 				createDebit(*card);
+			}
 			if (isDebit(*card))
 			{
 				m_printer->printInfo("Montant (0) ou ticket (1) ? ");
@@ -52,6 +57,7 @@ bool	Caisse::run()
 				{
 					setTicket(*card, (*m_config)["Ticket"]);
 					m_printer->printInfo("Ticket " + (*m_config)["Ticket"] + " ajouté.");
+					m_printer->printInfo("Posez une carte");
 				}
 				else
 				{
@@ -60,6 +66,7 @@ bool	Caisse::run()
 					float	credit = m_printer->getFloat();
 					incrementCredit(*card, credit);
 					m_printer->printInfo("Montant sur la carte : " + Printer::valueToString<float>(getCredit(*card)));
+					m_printer->printInfo("Posez une carte");
 				}
 			}
 		} catch (std::exception &e)
