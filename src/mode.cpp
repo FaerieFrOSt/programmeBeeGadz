@@ -1,4 +1,5 @@
 #include "mode.h"
+#include <string>
 
 Mode::Mode(Printer *printer, NfcDevice *device, Mysql *sql) : m_printer(printer),
 	m_device(device), m_sql(sql)
@@ -9,8 +10,9 @@ Mode::~Mode()
 
 bool	Mode::isAdmin(Card &card)
 {
-	(void)card;
-	return false;
+	std::string	admin("ADMIN");
+	std::string	tmp(reinterpret_cast<char*>(card[1][0].data()));
+	return admin == tmp;
 }
 
 bool	Mode::isSOS(Card &card)
