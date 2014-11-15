@@ -30,7 +30,7 @@ INC = -I$(PREFIX)/libnfc -I$(PREFIX)/include
 
 CFLAGS = -g -Wall -Werror -Wextra -std=c++11 $(MYSQLFLAGS) $(PYTHONFLAGS)
 
-LIB = $(LIBNFC) -lusb $(LIBMYSQL) $(LIBPYTHON)
+LIB = $(LIBNFC) -lusb $(LIBMYSQL) $(LIBPYTHON) -lncurses
 
 SRCDIR = $(PREFIX)/src
 

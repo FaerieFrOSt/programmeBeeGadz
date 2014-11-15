@@ -14,7 +14,7 @@ const nfc_modulation	NfcDevice::nmMifare = {
 	.nbr = NBR_106,
 };
 
-NfcDevice::NfcDevice(Printer *print) : m_infinite(false), m_device(nullptr), m_print(print), m_isInit(false)
+NfcDevice::NfcDevice(Printer *print) : m_infinite(true), m_device(nullptr), m_print(print), m_isInit(false)
 {
 	if (!m_instances && !m_context)
 	{

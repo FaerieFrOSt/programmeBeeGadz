@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/11 14:48:12 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/14 19:14:49 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/15 11:57:09 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,9 @@ class	Mode
 
 		void		sendSOS();
 
-		void		writeCard(Card &card);
-
 	protected:
+		bool		testCard(Card &card, std::string str);
+		void		writeCard(Card &card);
 		Printer									*m_printer;
 		NfcDevice								*m_device;
 		Mysql									*m_sql;

@@ -4,31 +4,55 @@
 
 #include "print_driver.h"
 #include <iostream>
+#include <ncurses.h>
 
 Printer::Printer(bool isDebug) : m_debug(isDebug)
-{}
+{
+	initscr();
+	cbreak();
+	nodelay(stdscr, TRUE);
+	start_color();
+	init_pair(1, COLOR_RED, COLOR_BLACK);
+	init_pair(2, COLOR_BLUE, COLOR_BLACK);
+	init_pair(3, COLOR_WHITE, COLOR_BLACK);
+}
 
 Printer::~Printer()
-{}
+{
+	endwin();
+}
+
+bool	Printer::keyPressed() const
+{
+	return getch() != ERR;
+}
 
 void    Printer::printMessage(Printer::Type type, std::string message)
 {
+	std::stringstream	oss("");
+	uint8_t	color = 3;
 	switch (type)
 	{
 		case    Printer::ERROR:
-			std::cout << "\033[30mERROR : " << message << "\033[0m" << std::endl;
+			color = 1;
+			oss << "ERROR : " << message << std::endl;
 			break;
 
 		case    Printer::DEBUG:
+			color = 2;
 			if (m_debug)
-				std::cout << "\033[34mDEBUG : " << message << "\033[0m" << std::endl;
+				oss << "DEBUG : " << message << std::endl;
 			break;
 
 		case    Printer::INFO:
 		default:
-			std::cout << "INFO : " <<  message << std::endl;
+			color = 3;
+			oss << "INFO : " <<  message << std::endl;
 			break;
 	}
+	attron(COLOR_PAIR(color));
+	printw(oss.str().c_str());
+	refresh();
 }
 
 void    Printer::printDebug(std::string message)

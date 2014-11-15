@@ -15,9 +15,10 @@ bool	Bar::run()
 	float		price = 0.0f;
 	std::time_t	time = std::time(nullptr);
 	m_printer->printInfo("Mode bar is running");
+	m_printer->printInfo("Posez une carte.");
+	std::unique_ptr<Card>	card;
 	while (true)
 	{
-		std::unique_ptr<Card>	card;
 		try
 		{
 			std::time_t	timer = std::time(nullptr);
@@ -28,10 +29,24 @@ bool	Bar::run()
 				m_printer->printInfo("Time ellapsed, Command reset.");
 				time = timer;
 			}
-			card = m_device->findCard();
+			if (m_printer->keyPressed())
+				return false;
+			if (!card)
+				card = m_device->findCard(false);
+			else if (!m_device->findCard(card->getUid(), card->sizeUid()))
+			{
+				if (!isConso(*card))
+				{
+					conso = "";
+					price = 0.0f;
+				}
+				card = m_device->findCard(false);
+			}
 			if (!card)
 				continue;
+			m_printer->printInfo("Lecture de la carte en cours, ne pas retirer la carte.");
 			card->readSector(1);
+			m_printer->printInfo("Lecture terminée");
 			if (isAdmin(*card))
 				return true;
 			else if (isSOS(*card))

@@ -42,6 +42,8 @@ bool	Application::run()
 			bool	admin = m_mode->run();
 			if (admin)
 				m_printer.printInfo("mode admin");
+			else
+				end = true;
 		}catch (std::exception &e)
 		{
 		}

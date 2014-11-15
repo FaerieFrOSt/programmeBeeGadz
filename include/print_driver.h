@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/19 22:30:28 by availlan          #+#    #+#             */
-/*   Updated: 2014/10/29 17:30:38 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/15 14:05:09 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ class   Printer
 	void    printInfo(std::string message);
 
 	bool	isDebug() const;
+	bool	keyPressed() const;
 
 	template<typename T>
 	static std::string	valueToString(const T &value, bool hex = false)
