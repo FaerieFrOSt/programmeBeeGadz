@@ -17,7 +17,7 @@ Application::Application(bool debug, char *argv0, char *argv1) : m_printer(debug
 	switch (m_config.getMode())
 	{
 		case Config::BAR:
-			m_mode = new Bar(&m_printer, &m_nfc, m_mysql);
+			m_mode = new Bar(&m_printer, &m_nfc, m_mysql, &m_config);
 			break;
 		default:
 			m_printer.printError("Error, not a reconized mode!");

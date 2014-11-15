@@ -1,8 +1,8 @@
 #include "mode.h"
 #include <string>
 
-Mode::Mode(Printer *printer, NfcDevice *device, Mysql *sql) : m_printer(printer),
-	m_device(device), m_sql(sql)
+Mode::Mode(Printer *printer, NfcDevice *device, Mysql *sql, Config *config) : m_printer(printer),
+	m_device(device), m_sql(sql), m_config(config)
 {}
 
 Mode::~Mode()
@@ -31,8 +31,14 @@ bool	Mode::isDebit(Card &card)
 
 bool	Mode::isConso(Card &card)
 {
-	(void)card;
-	return false;
+	return testCard(card, "CONSO");
+}
+
+int	Mode::getConso(Card &card)
+{
+	if (!isConso(card))
+		return -1;
+	return (int)card[1][1][0];
 }
 
 bool	Mode::hasTicket(Card &card)
@@ -51,8 +57,8 @@ std::string	Mode::getTicket(Card &card)
 
 void	Mode::decrementTicket(Card &card)
 {
-	if (card[1][1][0])
-		--card[1][1][0];
+	if (card[1][2][0])
+		--card[1][2][0];
 	writeCard(card);
 }
 

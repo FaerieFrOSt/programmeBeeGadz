@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/10 22:25:55 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/11 16:40:15 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/15 15:30:02 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include <string>
 #include <map>
 #include <array>
+#include <vector>
+#include <utility>
 
 class	Config
 {
@@ -29,18 +31,18 @@ class	Config
 			BAR,
 		};
 
-		const std::map<std::string, size_t>	&getPrices() const;
+		const std::pair<std::string, float>	&getConso(size_t nb) const;
 		const std::array<std::string, 4>	&getSqlInfos() const;
 		Mode								getMode() const;
 
 		const std::string					&operator[](const std::string &name);
 
 	private:
-		std::string							m_filename;
-		std::map<std::string, size_t>		m_prices;
-		std::map<std::string, std::string>	m_config;
-		std::array<std::string, 4>			m_sqlInfos;
-		Mode								m_mode;
+		std::string									m_filename;
+		std::vector<std::pair<std::string, float>>	m_consos;
+		std::map<std::string, std::string>			m_config;
+		std::array<std::string, 4>					m_sqlInfos;
+		Mode										m_mode;
 };
 
 #endif /* !CONFIG_DRIVER_H */

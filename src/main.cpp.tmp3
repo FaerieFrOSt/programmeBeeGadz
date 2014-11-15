@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <endian.h>
 #include <string>
+#include <memory>
 
 using namespace std;
 
@@ -27,9 +28,34 @@ void	print_hexa(bool S0[3], bool S1[3], bool S2[3], bool S3[3])
 	cout << hex << (int)(b6 & 0xff) << endl << hex << (int)(b7 & 0xff) << endl << hex << (int)(b8 & 0xff) << endl;
 }
 
+void	setTicket(Card &card)
+{
+	std::string	name("");
+	uint8_t	nb = 0;
+	card[1][2][0] = nb;
+	for (size_t	i = 0; i < name.size(); ++i)
+		card[1][2][i] = name[i];
+	card[1][2][name.size()] = 0;
+	card.writeSector(1);
+}
+
+void	setConso(Card &card)
+{
+	uint8_t conso = 0;
+	card[1][1][0] = conso;
+	card.writeSector(1);
+}
+
+void	setCredit(Card &card)
+{
+	float	credit = 111.118f;
+	std::memcpy(&card[1][1][0], &credit, 4);
+	card.writeSector(1);
+}
+
 void	setAdmin(Card &card)
 {
-	string	admin("ADMIN");
+	string	admin("CONSO");
 	for (size_t i = 0; i < admin.size(); ++i)
 		card[1][0][i] = admin[i];
 	card[1][0][admin.size()] = 0;
@@ -45,5 +71,7 @@ int	main()
 	card = device.findCard(true);
 	card->readSector(1);
 	/* setAdmin(*card); */
+	/* setConso(*card); */
+	while (!p.keyPressed());
 	return 0;
 }

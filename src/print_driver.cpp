@@ -11,6 +11,8 @@ Printer::Printer(bool isDebug) : m_debug(isDebug)
 	initscr();
 	cbreak();
 	nodelay(stdscr, TRUE);
+	scrollok(stdscr, true);
+	idlok(stdscr, true);
 	start_color();
 	init_pair(1, COLOR_RED, COLOR_BLACK);
 	init_pair(2, COLOR_BLUE, COLOR_BLACK);
