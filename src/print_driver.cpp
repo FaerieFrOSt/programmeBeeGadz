@@ -26,7 +26,7 @@ void    Printer::printMessage(Printer::Type type, std::string message)
 
 		case    Printer::INFO:
 		default:
-			std::cout << "INFO : " <<  message;
+			std::cout << "INFO : " <<  message << std::endl;
 			break;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/17 01:17:22 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/14 19:55:57 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/15 10:16:03 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ class   NfcDevice
 	bool					findCard(const uint8_t uid[8], size_t len);
 
 	private:
+	bool				m_infinite;
 	nfc_device			*m_device;
 	static nfc_context	*m_context;
 	static int			m_instances;

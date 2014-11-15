@@ -35,12 +35,13 @@ Application::~Application()
 bool	Application::run()
 {
 	bool	end = false;
-
 	while (!end)
 	{
 		try
 		{
-			end = m_mode->run();
+			bool	admin = m_mode->run();
+			if (admin)
+				m_printer.printInfo("mode admin");
 		}catch (std::exception &e)
 		{
 		}

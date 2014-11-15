@@ -14,6 +14,7 @@ bool	Bar::run()
 	std::string	conso = "";
 	float		price = 0.0f;
 	std::time_t	time = std::time(nullptr);
+	m_printer->printInfo("Mode bar is running");
 	while (true)
 	{
 		std::unique_ptr<Card>	card;
@@ -30,6 +31,7 @@ bool	Bar::run()
 			card = m_device->findCard();
 			if (!card)
 				continue;
+			card->readSector(1);
 			if (isAdmin(*card))
 				return true;
 			else if (isSOS(*card))

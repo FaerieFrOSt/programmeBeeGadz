@@ -14,7 +14,7 @@ const nfc_modulation	NfcDevice::nmMifare = {
 	.nbr = NBR_106,
 };
 
-NfcDevice::NfcDevice(Printer *print) : m_device(nullptr), m_print(print), m_isInit(false)
+NfcDevice::NfcDevice(Printer *print) : m_infinite(false), m_device(nullptr), m_print(print), m_isInit(false)
 {
 	if (!m_instances && !m_context)
 	{
@@ -46,6 +46,8 @@ NfcDevice::NfcDevice(Printer *print) : m_device(nullptr), m_print(print), m_isIn
 
 bool    NfcDevice::infiniteSelect(bool infinite)
 {
+	if (m_infinite == infinite)
+		return true;
 	m_print->printDebug("Setting the device to infinite/once mode");
 	if (nfc_device_set_property_bool(m_device, NP_INFINITE_SELECT, infinite) < 0)
 	{
@@ -53,6 +55,7 @@ bool    NfcDevice::infiniteSelect(bool infinite)
 		nfc_perror(m_device, "nfc_device_set_property_bool");
 		return false;
 	}
+	m_infinite = infinite;
 	return true;
 }
 
