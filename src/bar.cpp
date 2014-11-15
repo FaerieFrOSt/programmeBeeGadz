@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/15 15:44:24 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/15 16:14:16 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/15 17:15:21 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,6 @@ bool	Bar::run()
 			else
 				m_printer->printError("Carte corrompue !");
 		} catch (std::exception &e)
-		{
-			m_printer->printError("Carte corrompue !");
-		}
+		{}
 	}
 }

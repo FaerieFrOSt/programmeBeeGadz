@@ -10,7 +10,6 @@ Printer::Printer(bool isDebug) : m_debug(isDebug)
 {
 	initscr();
 	cbreak();
-	nodelay(stdscr, TRUE);
 	scrollok(stdscr, true);
 	idlok(stdscr, true);
 	start_color();
@@ -26,7 +25,14 @@ Printer::~Printer()
 
 bool	Printer::keyPressed() const
 {
+	nodelay(stdscr, TRUE);
 	return getch() != ERR;
+}
+
+int	Printer::getKeyPressed() const
+{
+	nodelay(stdscr, FALSE);
+	return getch();
 }
 
 void    Printer::printMessage(Printer::Type type, std::string message)

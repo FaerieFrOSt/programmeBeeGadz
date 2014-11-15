@@ -1,6 +1,8 @@
 #include "application.h"
 #include <exception>
 #include "bar.h"
+#include "admin.h"
+#include "caisse.h"
 
 Application::Application(bool debug, char *argv0, char *argv1) : m_printer(debug), m_config(argv1 ? argv1 : "config.txt"),
 		m_nfc(&m_printer), m_mysql(nullptr),
@@ -14,16 +16,26 @@ Application::Application(bool debug, char *argv0, char *argv1) : m_printer(debug
 		m_printer.printError("Error while connecting to mysql database");
 		throw;
 	}
+	m_mode = create_mode();
+}
+
+Mode	*Application::create_mode()
+{
+	Mode	*tmp = nullptr;
 	switch (m_config.getMode())
 	{
 		case Config::BAR:
-			m_mode = new Bar(&m_printer, &m_nfc, m_mysql, &m_config);
+			tmp = new Bar(&m_printer, &m_nfc, m_mysql, &m_config);
+			break;
+		case Config::CAISSE:
+			tmp = new Caisse(&m_printer, &m_nfc, m_mysql, &m_config);
 			break;
 		default:
 			m_printer.printError("Error, not a reconized mode!");
 			throw std::exception();
 			break;
 	}
+	return tmp;
 }
 
 Application::~Application()
@@ -41,7 +53,17 @@ bool	Application::run()
 		{
 			bool	admin = m_mode->run();
 			if (admin)
-				m_printer.printInfo("mode admin");
+			{
+				delete m_mode;
+				m_mode = new Admin(&m_printer, &m_nfc, m_mysql, &m_config);
+				if (m_mode->run())
+					end = true;
+				else
+				{
+					delete m_mode;
+					m_mode = create_mode();
+				}
+			}
 			else
 				end = true;
 		}catch (std::exception &e)

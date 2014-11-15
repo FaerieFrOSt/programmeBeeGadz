@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/11 14:14:44 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/11 17:10:34 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/15 16:26:58 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ class	Application
 		bool		run();
 
 	private:
+		Mode		*create_mode();
 		Printer		m_printer;
 		Config		m_config;
 		NfcDevice	m_nfc;

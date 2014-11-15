@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/10 22:33:16 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/15 15:47:27 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/15 16:54:17 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,11 @@ const std::array<std::string, 4>	&Config::getSqlInfos() const
 Config::Mode	Config::getMode() const
 {
 	return m_mode;
+}
+
+void	Config::setMode(Config::Mode mode)
+{
+	m_mode = mode;
 }
 
 const std::string				&Config::operator[](const std::string &name)
