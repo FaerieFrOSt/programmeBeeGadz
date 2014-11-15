@@ -19,6 +19,7 @@ bool	Admin::run()
 		switch (m_printer->getKeyPressed())
 		{
 			case '2':
+				m_printer->clearScreen();
 				m_printer->printInfo("--- Menu ---");
 				m_printer->printInfo("0 - mode Bar");
 				m_printer->printInfo("1 - mode Caisse");
@@ -42,6 +43,7 @@ bool	Admin::run()
 							end = true;
 							break;
 					}
+				m_printer->clearScreen();
 				m_printer->printInfo("--- Menu ---");
 				m_printer->printInfo("0 - quit Admin mode");
 				m_printer->printInfo("1 - quit program");

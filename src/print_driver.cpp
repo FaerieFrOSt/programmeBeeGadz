@@ -1,6 +1,14 @@
-/********************************/
-/*      Print driver facility   */
-/********************************/
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print_driver.cpp                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2014/11/15 21:59:55 by availlan          #+#    #+#             */
+/*   Updated: 2014/11/15 22:06:58 by availlan         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "print_driver.h"
 #include <iostream>
@@ -33,6 +41,18 @@ int	Printer::getKeyPressed() const
 {
 	nodelay(stdscr, FALSE);
 	return getch();
+}
+
+float	Printer::getFloat() const
+{
+	float	tmp = 0.0f;
+	scanw("%f", &tmp);
+	return tmp;
+}
+
+void	Printer::clearScreen() const
+{
+	clear();	
 }
 
 void    Printer::printMessage(Printer::Type type, std::string message)

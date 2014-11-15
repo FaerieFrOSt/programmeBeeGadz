@@ -12,10 +12,10 @@ Caisse::~Caisse()
 bool	Caisse::run()
 {
 	m_printer->printInfo("Mode Caisse");
-	m_printer->printInfo("Posez une carte");
 	std::unique_ptr<Card>	card(nullptr);
 	bool					read = false;
-	while (true);
+	m_printer->printInfo("Posez une carte");
+	while (true)
 	{
 		try
 		{
@@ -38,18 +38,29 @@ bool	Caisse::run()
 			if (!read)
 			{
 				m_printer->printInfo("Lecture de la carte en cours, ne pas retirer la carte.");
-				card->readSector(1);
+				if (!card->readSector(1))
+					continue;
 				read = true;
 				m_printer->printInfo("Lecture terminée");
 			}
+			if (!isDebit(*card))
+				createDebit(*card);
 			if (isDebit(*card))
 			{
-				m_printer->printInfo("Entrez le montant à ajouter sur la carte");
-				int	key;
-				do
+				m_printer->printInfo("Montant (0) ou ticket (1) ? ");
+				if (m_printer->getKeyPressed() == '1')
 				{
-					key
-				} while (key != KEY_ENTER);
+					setTicket(*card, (*m_config)["Ticket"]);
+					m_printer->printInfo("Ticket " + (*m_config)["Ticket"] + " ajouté.");
+				}
+				else
+				{
+					m_printer->printInfo("Montant sur la carte : " + Printer::valueToString<float>(getCredit(*card)));
+					m_printer->printInfo("Entrez le montant à ajouter sur la carte : ");
+					float	credit = m_printer->getFloat();
+					incrementCredit(*card, credit);
+					m_printer->printInfo("Montant sur la carte : " + Printer::valueToString<float>(getCredit(*card)));
+				}
 			}
 		} catch (std::exception &e)
 		{}

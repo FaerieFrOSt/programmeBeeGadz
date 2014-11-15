@@ -71,12 +71,41 @@ float	Mode::getCredit(Card &card)
 	return credit;
 }
 
+void	Mode::createDebit(Card &card)
+{
+	std::string	name("DEBIT");
+	float	credit = 0.0f;
+	for (size_t i = 0; i < name.size(); ++i)
+		card[1][0][i] = name[i];
+	card[1][0][name.size()] = 0;
+	std::memcpy(&card[1][1][0], &credit, 4);
+	writeCard(card);
+}
+
+void	Mode::setTicket(Card &card, const std::string &name)
+{
+	card[1][2][0] = 1;
+	for (size_t	i = 0; i < name.size(); ++i)
+		card[1][2][i + 1] = name[i];
+	card[1][2][name.size() + 1] = 0;
+	writeCard(card);
+}
+
 void	Mode::decrementCredit(Card &card, float price)
 {
 	float	credit = getCredit(card);
 	if (!credit)
 		return;
 	credit -= price;
+	std::memcpy(&card[1][1][0], &credit, 4);
+	writeCard(card);
+}
+
+void	Mode::incrementCredit(Card &card, float credit)
+{
+	if (!credit)
+		return;
+	credit += getCredit(card);
 	std::memcpy(&card[1][1][0], &credit, 4);
 	writeCard(card);
 }

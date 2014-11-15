@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/10 22:33:16 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/15 16:54:17 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/15 22:01:18 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ Config::Config(std::string filename) : m_filename(filename)
 	m_config["db"] = "scores";
 	m_config["user"] = "root";
 	m_config["passwd"] = "vive-moi";
+	m_config["Ticket"] = "Bouteille de champagne";
 	m_consos.push_back(std::make_pair("Bière", 1.0));
 	m_consos.push_back(std::make_pair("Coupe de champagne", 1.5));
 	m_consos.push_back(std::make_pair("Bouteille de champagne", 2));

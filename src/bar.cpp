@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/15 15:44:24 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/15 17:15:21 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/15 21:03:57 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,8 @@ bool	Bar::run()
 			if (!read)
 			{
 				m_printer->printInfo("Lecture de la carte en cours, ne pas retirer la carte.");
-				card->readSector(1);
+				if (!card->readSector(1))
+					continue;
 				read = true;
 				m_printer->printInfo("Lecture terminée");
 			}

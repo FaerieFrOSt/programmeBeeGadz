@@ -54,6 +54,7 @@ bool	Application::run()
 			bool	admin = m_mode->run();
 			if (admin)
 			{
+				m_printer.clearScreen();
 				delete m_mode;
 				m_mode = new Admin(&m_printer, &m_nfc, m_mysql, &m_config);
 				if (m_mode->run())
@@ -63,6 +64,7 @@ bool	Application::run()
 					delete m_mode;
 					m_mode = create_mode();
 				}
+				m_printer.clearScreen();
 			}
 			else
 				end = true;
