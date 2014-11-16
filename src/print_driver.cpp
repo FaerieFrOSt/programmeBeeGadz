@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/15 21:59:55 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/15 22:06:58 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/16 14:01:46 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 Printer::Printer(bool isDebug) : m_debug(isDebug)
 {
 	initscr();
-	cbreak();
+	/* cbreak(); */
+	raw();
 	scrollok(stdscr, true);
 	idlok(stdscr, true);
 	start_color();
@@ -34,17 +35,27 @@ Printer::~Printer()
 bool	Printer::keyPressed() const
 {
 	nodelay(stdscr, TRUE);
+	noecho();
 	return getch() != ERR;
+}
+
+int	Printer::getKeyPressedNB() const
+{
+	nodelay(stdscr, TRUE);
+	noecho();
+	return getch();
 }
 
 int	Printer::getKeyPressed() const
 {
 	nodelay(stdscr, FALSE);
+	noecho();
 	return getch();
 }
 
 float	Printer::getFloat() const
 {
+	echo();
 	float	tmp = 0.0f;
 	scanw("%f", &tmp);
 	return tmp;

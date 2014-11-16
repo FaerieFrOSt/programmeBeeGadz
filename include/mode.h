@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/11 14:48:12 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/15 21:46:03 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/16 22:48:54 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,9 @@ class	Mode
 		bool		isDebit(Card &card);
 		bool		isConso(Card &card);
 
-		int			getConso(Card &card);
+		float		getCredit(Card &card);
 		bool		hasTicket(Card &card);
 		std::string	getTicket(Card &card);
-		void		setTicket(Card &card, const std::string &name);
-		void		decrementTicket(Card &card);
-		float		getCredit(Card &card);
-		void		decrementCredit(Card &card, float price);
-		void		incrementCredit(Card &card, float credit);
 
 		void		createDebit(Card &card);
 

@@ -37,7 +37,8 @@ NfcDevice::NfcDevice(Printer *print) : m_infinite(true), m_device(nullptr), m_pr
 	m_print->printDebug("Initializing device");
 	if (nfc_initiator_init(m_device) < 0)
 	{
-		nfc_perror(m_device, "nfc_initiator_init");
+		m_print->printError("Error while initializing device");
+		/* nfc_perror(m_device, "nfc_initiator_init"); */
 		throw std::exception();
 	}
 	m_print->printDebug("Device name : " + std::string(nfc_device_get_name(m_device)));
@@ -52,7 +53,7 @@ bool    NfcDevice::infiniteSelect(bool infinite)
 	if (nfc_device_set_property_bool(m_device, NP_INFINITE_SELECT, infinite) < 0)
 	{
 		m_print->printError("Error while trying to set property");
-		nfc_perror(m_device, "nfc_device_set_property_bool");
+		/* nfc_perror(m_device, "nfc_device_set_property_bool"); */
 		return false;
 	}
 	m_infinite = infinite;
@@ -73,7 +74,7 @@ std::unique_ptr<Card>	NfcDevice::findCard(bool infinite)
 	nfc_target	target;
 
 	infiniteSelect(infinite);
-	m_print->printDebug("Searching for a card...");
+	/* m_print->printDebug("Searching for a card..."); */
 	if (nfc_initiator_select_passive_target(m_device, nmMifare, nullptr, 0, &target) > 0)
 	{
 		m_print->printDebug("Found NFC tag : ");
@@ -82,7 +83,7 @@ std::unique_ptr<Card>	NfcDevice::findCard(bool infinite)
 		std::unique_ptr<Card>	tmp(new Card(this, m_print, target));
 		return std::move(tmp);
 	}
-	m_print->printDebug("No card present.");
+	/* m_print->printDebug("No card present."); */
 	return nullptr;
 }
 
@@ -90,7 +91,7 @@ bool    NfcDevice::mifareCmd(mifare_cmd cmd, size_t block, mifare_param *param)
 {
 	if (nfc_initiator_mifare_cmd(m_device, cmd, block, param))
 		return true;
-	nfc_perror(m_device, "nfc error : ");
+	/* nfc_perror(m_device, "nfc error : "); */
 	return false;
 }
 

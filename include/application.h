@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/11 14:14:44 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/15 16:26:58 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/16 10:35:10 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ class	Application
 
 	private:
 		Mode		*create_mode();
-		Printer		m_printer;
+		Printer		*m_printer;
 		Config		m_config;
-		NfcDevice	m_nfc;
+		NfcDevice	*m_nfc;
 		Mysql		*m_mysql;
 		Python		m_python;
 		Mode		*m_mode;

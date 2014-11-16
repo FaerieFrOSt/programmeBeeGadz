@@ -27,7 +27,6 @@ Block	&Block::operator=(const Block &other)
 
 uint8_t	&Block::operator[](size_t block)
 {
-	m_state = Block::MODIFIED;
 	return m_data[block];
 }
 

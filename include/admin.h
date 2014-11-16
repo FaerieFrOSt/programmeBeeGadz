@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/15 16:17:46 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/15 16:18:51 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/16 22:45:11 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,12 @@ class	Admin : public Mode
 		virtual ~Admin();
 
 		virtual bool	run();
+
+	protected:
+		void	createAdmin(Card &card);
+		void	createConso(Card &card, uint8_t id);
+		void	createSOS(Card &card);
+
 };
 
 #endif /* !ADMIN_H */

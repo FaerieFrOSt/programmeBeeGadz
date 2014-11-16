@@ -176,7 +176,6 @@ size_t	Card::calculateSector(size_t block, size_t *nb) const
 
 bool	Card::authenticate(size_t block)
 {
-	bool            res;
 	NfcDevice       *device;
 
 	device = static_cast<NfcDevice*>(m_device);
@@ -188,8 +187,7 @@ bool	Card::authenticate(size_t block)
 	{
 		std::memcpy(m_param.mpa.abtKey, m_data[sector].authentificationKey(), 6);
 		m_print->printDebug("Trying with key " + Printer::arrayToString<uint8_t>(m_param.mpa.abtKey, 6) + " on key " + std::string(m_data[sector].keyB() ? "B" : "A"));
-		res = device->mifareCmd(m_data[sector].keyB() ? MC_AUTH_B : MC_AUTH_A, block, &m_param);
-		if (res)
+		if (device->mifareCmd(m_data[sector].keyB() ? MC_AUTH_B : MC_AUTH_A, block, &m_param))
 		{
 			m_print->printDebug("Authenticated normaly");
 			return true;
@@ -197,7 +195,7 @@ bool	Card::authenticate(size_t block)
 		else if (!device->findCard(getUid(), m_uidLen))
 		{
 			m_print->printError("The tag was removed !");
-			return false;
+			throw std::exception();
 		}
 		m_data[sector].setAuthentificationKey(&m_keys[i]);
 		i += 6;
@@ -208,7 +206,6 @@ bool	Card::authenticate(size_t block)
 
 bool    Card::readData(size_t block)
 {
-	bool		res;
 	NfcDevice	*device;
 	size_t		sector;
 	size_t		tmp;
@@ -216,12 +213,12 @@ bool    Card::readData(size_t block)
 	sector = calculateSector(block, &tmp);
 	device = static_cast<NfcDevice*>(m_device);
 	std::memcpy(m_param.mpa.abtAuthUid, getUid(), m_uidLen);
-	if (!(res = device->mifareCmd(MC_READ, block, &m_param)))
+	if (!device->mifareCmd(MC_READ, block, &m_param))
 	{
 		if (!device->findCard(getUid(), m_uidLen))
 		{
 			m_print->printError("The tag was removed !");
-			return false;
+			throw std::exception();
 		}
 		m_print->printError("Error while reading block " + Printer::valueToString<size_t>(block, true));
 		return false;
@@ -252,21 +249,22 @@ bool    Card::writeSector(size_t sector)
 
 bool    Card::writeData(size_t block)
 {
-	bool            res;
 	NfcDevice       *device;
 	size_t			sector;
 	size_t			tmp;
 
 	sector = calculateSector(block, &tmp);
+	if (m_data[sector][tmp].getState() == Block::CLEAN || m_data[sector][tmp].getState() == Block::DIRTY)
+		return true;
 	device = static_cast<NfcDevice*>(m_device);
 	std::memcpy(m_param.mpd.abtData, m_data[sector][tmp].data(), m_data[sector][tmp].size());
 	m_print->printDebug("Trying to write " + Printer::arrayToString<uint8_t>(m_param.mpd.abtData, 16) + " on block " + Printer::valueToString<size_t>(block, true));
-	if (!(res = device->mifareCmd(MC_WRITE, block, &m_param)))
+	if (!device->mifareCmd(MC_WRITE, block, &m_param))
 	{
 		if (!device->findCard(getUid(), m_uidLen))
 		{
 			m_print->printError("The tag was removed !");
-			return false;
+			throw std::exception();
 		}
 		return false;
 	}
@@ -286,7 +284,7 @@ bool    Card::writeMifareClassic(size_t sector)
 	size_t	block = calculateBlock(sector) - m_data[sector].size() + 1;
 	for (auto i : m_data[sector])
 	{
-		if (i.getState() == Block::CLEAN)
+		if (i.getState() == Block::CLEAN || i.getState() == Block::DIRTY)
 		{
 			m_print->printDebug("Nothing to write on block " + Printer::valueToString<size_t>(block, true));
 			++block;
@@ -296,7 +294,6 @@ bool    Card::writeMifareClassic(size_t sector)
 			if (!writeData(block))
 				m_print->printError("Error while writing block " + Printer::valueToString<size_t>(block, true));
 		++block;
-		(void)i;
 	}
 	return true;
 }

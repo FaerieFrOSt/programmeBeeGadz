@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/10 22:33:16 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/15 22:01:18 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/16 22:54:29 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,20 @@ Config::Config(std::string filename) : m_filename(filename)
 	m_config["db"] = "scores";
 	m_config["user"] = "root";
 	m_config["passwd"] = "vive-moi";
-	m_config["Ticket"] = "Bouteille de champagne";
+	m_config["Ticket"] = "B. champagne";
 	m_consos.push_back(std::make_pair("Bière", 1.0));
 	m_consos.push_back(std::make_pair("Coupe de champagne", 1.5));
-	m_consos.push_back(std::make_pair("Bouteille de champagne", 2));
+	m_consos.push_back(std::make_pair("B. champagne", 2));
 }
 
 const std::pair<std::string, float>	&Config::getConso(size_t nb) const
 {
 	return m_consos[nb];
+}
+
+size_t	Config::getNbConso() const
+{
+	return m_consos.size();
 }
 
 const std::array<std::string, 4>	&Config::getSqlInfos() const

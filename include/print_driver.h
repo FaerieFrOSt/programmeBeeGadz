@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/19 22:30:28 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/15 22:05:58 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/16 14:02:03 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ class   Printer
 	bool	isDebug() const;
 	bool	keyPressed() const;
 	int		getKeyPressed() const;
+	int		getKeyPressedNB() const;
 	float	getFloat() const;
 
 	void	clearScreen() const;

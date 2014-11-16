@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/10 22:25:55 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/15 21:47:27 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/16 22:54:16 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <array>
 #include <vector>
 #include <utility>
+#include <cstring>
 
 class	Config
 {
@@ -32,6 +33,7 @@ class	Config
 		};
 
 		const std::pair<std::string, float>	&getConso(size_t nb) const;
+		size_t								getNbConso() const;
 		const std::array<std::string, 4>	&getSqlInfos() const;
 		Mode								getMode() const;
 		void								setMode(Mode mode);

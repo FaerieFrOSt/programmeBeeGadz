@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/15 16:54:34 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/15 16:58:45 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/16 22:46:54 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,8 @@ class	Caisse : public Mode
 		virtual ~Caisse();
 
 		virtual bool	run();
+	protected:
+		void		incrementCredit(Card &card, float credit);
+		void		setTicket(Card &card, const std::string &name);
 };
 #endif /* !CAISSE_H */
