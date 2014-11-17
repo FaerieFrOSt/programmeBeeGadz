@@ -15,7 +15,6 @@
 
 #include <string>
 #include <map>
-#include <array>
 #include <vector>
 #include <utility>
 #include <cstring>
@@ -26,6 +25,7 @@ class	Config
 		Config(std::string filename);
 		Config(const Config&) = delete;
 		Config	&operator=(const Config&) = delete;
+		~Config();
 
 		enum Mode {
 			CAISSE,
@@ -35,7 +35,6 @@ class	Config
 
 		const std::pair<std::string, float>	&getConso(size_t nb) const;
 		size_t								getNbConso() const;
-		const std::array<std::string, 4>	&getSqlInfos() const;
 		Mode								getMode() const;
 		void								setMode(Mode mode);
 
@@ -45,7 +44,6 @@ class	Config
 		std::string									m_filename;
 		std::vector<std::pair<std::string, float>>	m_consos;
 		std::map<std::string, std::string>			m_config;
-		std::array<std::string, 4>					m_sqlInfos;
 		Mode										m_mode;
 };
 

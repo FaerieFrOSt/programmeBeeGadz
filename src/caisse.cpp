@@ -89,8 +89,8 @@ bool	Caisse::run()
 				int	key = m_printer->getKeyPressed();
 				if (key == '1')
 				{
-					setTicket(*card, std::stoi((*m_config)["Ticket"]));
-					m_printer->printInfo("Ticket " + (*m_config)["Ticket"] + " ajouté.");
+					setTicket(*card, std::stoi((*m_config)["ticket"]));
+					m_printer->printInfo("Ticket " + (*m_config)["ticket"] + " ajouté.");
 					m_printer->printInfo("Posez une carte");
 				}
 				else if (key == '0')
