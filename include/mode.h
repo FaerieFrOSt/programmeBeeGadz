@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/11 14:48:12 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/16 22:48:54 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/17 13:18:17 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ class	Mode
 
 		float		getCredit(Card &card);
 		bool		hasTicket(Card &card);
-		std::string	getTicket(Card &card);
+		uint8_t		getTicket(Card &card);
 
 		void		createDebit(Card &card);
 

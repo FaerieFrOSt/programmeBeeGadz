@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/15 15:44:24 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/16 22:49:56 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/17 22:31:29 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,15 +126,16 @@ bool	Bar::run()
 			}
 			else if (isDebit(*card) && !conso.empty())
 			{
-				if (hasTicket(*card) && conso.count(std::make_pair(getTicket(*card), 0)))
+				if (hasTicket(*card) && conso.count(m_config->getConso(getTicket(*card))))
 				{
-					--conso[std::make_pair(getTicket(*card), 0)];
-					if (!conso[std::make_pair(getTicket(*card), 0)])
-						conso.erase(std::make_pair(getTicket(*card), 0));
-					m_printer->printInfo("Ticket " + getTicket(*card) + " utilisé.");
+					m_printer->printDebug(m_config->getConso(getTicket(*card)).first);
+					--conso[m_config->getConso(getTicket(*card))];
+					if (!conso[m_config->getConso(getTicket(*card))])
+						conso.erase(m_config->getConso(getTicket(*card)));
+					m_printer->printInfo("Ticket " + m_config->getConso(getTicket(*card)).first + " utilisé.");
 					decrementTicket(*card);
 				}
-				else if (getCredit(*card) >= getPrice(conso))
+				if (getCredit(*card) >= getPrice(conso))
 				{
 					m_printer->printInfo("OK");
 					decrementCredit(*card, getPrice(conso));

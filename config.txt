@@ -1,0 +1,8 @@
+// Configuration options
+{
+	"mode" : "bar",
+	"server" : "127.0.0.1",
+	"database" : "guinche",
+	"user" : "root",
+	"password" : "vive-moi",
+}

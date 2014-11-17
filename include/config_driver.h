@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/10 22:25:55 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/16 22:54:16 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/17 20:29:05 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ class	Config
 		enum Mode {
 			CAISSE,
 			BAR,
+			KVE,
 		};
 
 		const std::pair<std::string, float>	&getConso(size_t nb) const;

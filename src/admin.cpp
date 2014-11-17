@@ -133,6 +133,8 @@ bool	Admin::run()
 							end = true;
 							break;
 						case '2':
+							m_config->setMode(Config::KVE);
+							m_printer->printInfo("Mode Kve activé");
 							end = true;
 							break;
 						default:

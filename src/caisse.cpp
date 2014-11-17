@@ -18,12 +18,10 @@ void	Caisse::incrementCredit(Card &card, float credit)
 	writeCard(card);
 }
 
-void	Caisse::setTicket(Card &card, const std::string &name)
+void	Caisse::setTicket(Card &card, uint8_t id)
 {
 	card[1][2][0] = 1;
-	for (size_t	i = 0; i < name.size(); ++i)
-		card[1][2][i + 1] = name[i];
-	card[1][2][name.size() + 1] = 0;
+	card[1][2][1] = id;
 	card[1][2].setState(Block::MODIFIED);
 	writeCard(card);
 }
@@ -69,29 +67,29 @@ bool	Caisse::run()
 			}
 			if (isAdmin(*card))
 				return true;
-			if (isSOS(*card))
+			else if (isSOS(*card))
 				sendSOS();
-			if (isConso(*card))
+			else if (isConso(*card))
 			{
 				m_printer->printInfo("Ceci est une carte CONSO");
 				m_printer->printInfo("Posez une carte.");
 				continue;
 			}
-			if (!isDebit(*card))
+			else if (!isDebit(*card))
 			{
 				m_printer->printInfo("Création de la carte en cours");
 				createDebit(*card);
 			}
-			if (isDebit(*card))
+			else if (isDebit(*card))
 			{
 				m_printer->printInfo("Montant sur la carte : " + Printer::valueToString<float>(getCredit(*card)));
 				if (hasTicket(*card))
-					m_printer->printInfo("Ticket sur la carte : " + getTicket(*card));
+					m_printer->printInfo("Ticket sur la carte : " + m_config->getConso(getTicket(*card)).first);
 				m_printer->printInfo("Montant (0) ou ticket (1) (2 pour annuler) ? ");
 				int	key = m_printer->getKeyPressed();
 				if (key == '1')
 				{
-					setTicket(*card, (*m_config)["Ticket"]);
+					setTicket(*card, std::stoi((*m_config)["Ticket"]));
 					m_printer->printInfo("Ticket " + (*m_config)["Ticket"] + " ajouté.");
 					m_printer->printInfo("Posez une carte");
 				}

@@ -3,6 +3,7 @@
 #include "bar.h"
 #include "admin.h"
 #include "caisse.h"
+#include "kve.h"
 
 Application::Application(bool debug, char *argv0, char *argv1) : m_printer(nullptr), m_config(argv1 ? argv1 : "config.txt"),
 		m_nfc(nullptr), m_mysql(nullptr),
@@ -11,7 +12,7 @@ Application::Application(bool debug, char *argv0, char *argv1) : m_printer(nullp
 	m_printer = new Printer(debug);
 	try
 	{
-		m_mysql = new Mysql(m_config["server"], m_config["db"], m_config["user"], m_config["passwd"]);
+		m_mysql = new Mysql(m_config["server"], m_config["db"], m_config["user"], m_config["password"]);
 	} catch (std::exception &e)
 	{
 		m_printer->printError("Error while connecting to mysql database");
@@ -42,6 +43,9 @@ Mode	*Application::create_mode()
 			break;
 		case Config::CAISSE:
 			tmp = new Caisse(m_printer, m_nfc, m_mysql, &m_config);
+			break;
+		case Config::KVE:
+			tmp = new Kve(m_printer, m_nfc, m_mysql, &m_config);
 			break;
 		default:
 			m_printer->printError("Error, mode not reconized");

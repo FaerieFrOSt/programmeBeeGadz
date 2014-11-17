@@ -42,11 +42,11 @@ bool	Mode::hasTicket(Card &card)
 	return false;
 }
 
-std::string	Mode::getTicket(Card &card)
+uint8_t	Mode::getTicket(Card &card)
 {
 	if (hasTicket(card))
-		return std::string(reinterpret_cast<char*>(card[1][2].data() + 1));
-	return std::string("");
+		return card[1][2][1];
+	return 0;
 }
 
 float	Mode::getCredit(Card &card)
