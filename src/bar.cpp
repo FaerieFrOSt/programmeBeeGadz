@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/15 15:44:24 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/17 22:31:29 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/18 19:11:46 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,7 @@ bool	Bar::run()
 		} catch (std::exception &e)
 		{}
 	}
+	return false;
 }
 
 float	Bar::getPrice(std::unordered_map<std::pair<std::string, float>, size_t, Bar::pair_hash, Bar::pair_cmp> &a) const

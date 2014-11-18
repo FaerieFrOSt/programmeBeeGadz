@@ -17,7 +17,12 @@ bool	Mode::testCard(Card &card, std::string str)
 
 bool	Mode::isAdmin(Card &card)
 {
-	return testCard(card, "ADMIN");
+	if (testCard(card, "ADMIN"))
+	{
+		m_config->setMode(Config::ADMIN);
+		return true;
+	}
+	return false;
 }
 
 bool	Mode::isSOS(Card &card)

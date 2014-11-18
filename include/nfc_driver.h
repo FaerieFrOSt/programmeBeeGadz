@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/17 01:17:22 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/15 10:16:03 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/18 19:01:35 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,14 @@
 #include "print_driver.h"
 #include "card.h"
 #include "mifare.h"
-#include <memory>
 
 class   NfcDevice
 {
 	public:
 	NfcDevice(Printer *print); //Throws an exception when something bad happened
 	~NfcDevice();
-	NfcDevice(const NfcDevice&) = delete;
-	NfcDevice&	operator=(const NfcDevice&) = delete;
+	/* NfcDevice(const NfcDevice&) = delete; */
+	/* NfcDevice&	operator=(const NfcDevice&) = delete; */
 
 	bool					infiniteSelect(bool infinite);
 	bool					mifareCmd(mifare_cmd key, size_t block, mifare_param *param);
@@ -34,13 +33,13 @@ class   NfcDevice
 	bool					findCard(const uint8_t uid[8], size_t len);
 
 	private:
-	bool				m_infinite;
-	nfc_device			*m_device;
-	static nfc_context	*m_context;
-	static int			m_instances;
-	Printer				*m_print;
-	bool				m_isInit;
-	static const		nfc_modulation nmMifare;
+	bool						m_infinite;
+	nfc_device					*m_device;
+	static nfc_context			*m_context;
+	static int					m_instances;
+	Printer						*m_print;
+	bool						m_isInit;
+	static const				nfc_modulation nmMifare;
 };
 
 #endif /* !NFC_DRIVER_H */

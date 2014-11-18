@@ -5,20 +5,36 @@
 #include "caisse.h"
 #include "kve.h"
 
-Application::Application(bool debug, char *argv0, char *argv1) : m_printer(nullptr), m_config(argv1 ? argv1 : "config.txt"),
+Application::Application(bool debug, char *argv0, char *argv1) : m_printer(nullptr), m_config(nullptr),
 		m_nfc(nullptr), m_mysql(nullptr),
 		m_python(argv0), m_mode(nullptr)
 {
 	m_printer = new Printer(debug);
 	try
 	{
-		m_mysql = new Mysql(m_config["server"], m_config["db"], m_config["user"], m_config["password"]);
-	} catch (std::exception &e)
+		m_config = new Config(m_printer, argv1 ? argv1 : "config.txt");
+	} catch(std::exception &e)
 	{
-		m_printer->printError("Error while connecting to mysql database");
 		while (!m_printer->keyPressed());
-		delete m_printer;
+		clean();
 		throw;
+	}
+	for (size_t i = 0; i < m_config->getNbSqlInfo(); ++i)
+	{
+		try
+		{
+			m_mysql = new Mysql(m_config->getSqlInfo(i));
+		} catch (std::exception &e)
+		{
+			m_printer->printError("Error while connecting to mysql database with config " + std::to_string(i));
+		}
+	}
+	if (!m_mysql)
+	{
+		m_printer->printError("Error while connecting to database!");
+		while (!m_printer->keyPressed());
+		clean();
+		throw std::exception();
 	}
 	try
 	{
@@ -26,44 +42,44 @@ Application::Application(bool debug, char *argv0, char *argv1) : m_printer(nullp
 	} catch (std::exception &e)
 	{
 		while (!m_printer->keyPressed());
-		delete m_printer;
-		delete m_mysql;
+		clean();
 		throw;
 	}
 	m_mode = create_mode();
 }
 
-Mode	*Application::create_mode()
+void	Application::clean()
 {
-	Mode	*tmp = nullptr;
-	switch (m_config.getMode())
-	{
-		case Config::BAR:
-			tmp = new Bar(m_printer, m_nfc, m_mysql, &m_config);
-			break;
-		case Config::CAISSE:
-			tmp = new Caisse(m_printer, m_nfc, m_mysql, &m_config);
-			break;
-		case Config::KVE:
-			tmp = new Kve(m_printer, m_nfc, m_mysql, &m_config);
-			break;
-		default:
-			m_printer->printError("Error, mode not reconized");
-			while (!m_printer->keyPressed());
-			delete m_printer;
-			delete m_mysql;
-			throw std::exception();
-			break;
-	}
-	return tmp;
+	delete m_printer;
+	delete m_config;
+	delete m_mysql;
+	delete m_nfc;
 }
 
 Application::~Application()
 {
-	delete m_mysql;
-	delete m_mode;
-	delete m_printer;
-	delete m_nfc;
+	clean();
+}
+
+std::unique_ptr<Mode>	Application::create_mode()
+{
+	switch (m_config->getMode())
+	{
+		case Config::BAR:
+			return std::unique_ptr<Mode>(new Bar(m_printer, m_nfc, m_mysql, m_config));
+		case Config::CAISSE:
+			return std::unique_ptr<Mode>(new Caisse(m_printer, m_nfc, m_mysql, m_config));
+		case Config::KVE:
+			return std::unique_ptr<Mode>(new Kve(m_printer, m_nfc, m_mysql, m_config));
+		case Config::ADMIN:
+			return std::unique_ptr<Mode>(new Admin(m_printer, m_nfc, m_mysql, m_config));
+		default:
+			m_printer->printError("Error, mode not reconized");
+			while (!m_printer->keyPressed());
+			clean();
+			throw std::exception();
+	}
+	return nullptr;
 }
 
 bool	Application::run()
@@ -73,23 +89,13 @@ bool	Application::run()
 	{
 		try
 		{
-			bool	admin = m_mode->run();
-			if (admin)
+			if (!m_mode->run())
+				end = true;
+			else
 			{
-				m_printer->clearScreen();
-				delete m_mode;
-				m_mode = new Admin(m_printer, m_nfc, m_mysql, &m_config);
-				if (m_mode->run())
-					end = true;
-				else
-				{
-					delete m_mode;
-					m_mode = create_mode();
-				}
+				m_mode = create_mode();
 				m_printer->clearScreen();
 			}
-			else
-				end = true;
 		}catch (std::exception &e)
 		{
 		}

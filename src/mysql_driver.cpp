@@ -12,6 +12,17 @@ Mysql::Mysql(std::string server, std::string db, std::string user, std::string p
 		throw std::exception();
 }
 
+Mysql::Mysql(const std::array<std::string, 4> &data) : m_server(data[0]), m_db(data[1]), m_user(data[2]),
+	m_passwd(data[3]), m_result(nullptr), m_nbFields(0)
+{
+	mysql_init(&m_mysql);
+	mysql_options(&m_mysql, MYSQL_READ_DEFAULT_GROUP, "option");
+	if (mysql_real_connect(&m_mysql, m_server.c_str(), m_user.c_str(), m_passwd.c_str(), m_db.c_str(), 0, 0, 0))
+		mysql_close(&m_mysql);
+	else
+		throw std::exception();
+}
+
 Mysql::~Mysql()
 {
 	if (m_result)

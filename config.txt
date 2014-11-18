@@ -4,10 +4,20 @@
 	"mode" : "bar",
 
 	// Acces serveur sex
-	"server" : "127.0.0.1",
-	"database" : "guinche",
-	"user" : "root",
-	"password" : "vive-moi",
+	"mysql" : {
+		"config_1" : {
+			"server" : "127.0.0.1",
+			"database" : "scores",
+			"user" : "root",
+			"password" : "vive-moi"
+		},
+		"config_2" : {
+			"server" : "127.0.0.1",
+			"database" : "scores",
+			"user" : "root",
+			"password" : "vive-moi"
+		}
+	},
 
 	// Consos disponibles avec les prix
 	"consos" : {

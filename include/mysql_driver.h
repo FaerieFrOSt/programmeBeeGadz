@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/09 12:37:46 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/10 11:57:18 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/18 09:31:30 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,13 @@
 #include <mysql.h>
 #include <string>
 #include <vector>
+#include <array>
 
 class	Mysql
 {
 	public:
 		Mysql(std::string server, std::string db, std::string user, std::string passwd);
+		Mysql(const std::array<std::string, 4>&); //array[0] = server, array[1] = db, array[2] = user, array[3] = passwd
 		~Mysql();
 		Mysql(const Mysql&) = delete;
 		Mysql						&operator=(const Mysql) = delete;

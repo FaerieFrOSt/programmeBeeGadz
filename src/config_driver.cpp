@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/10 22:33:16 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/17 22:49:31 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/18 18:59:21 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,17 @@
 #include <exception>
 #include <fstream>
 
-Config::Config(std::string filename) : m_filename(filename)
+Config::Config(Printer *p, std::string filename) : m_print(p), m_filename(filename)
 {
-	Json::Value	root;
+	Json::Value		root;
 	Json::Reader	reader;
 	std::ifstream	tmp(filename, std::ifstream::binary);
 	if (!reader.parse(tmp, root))
+	{
+		m_print->printError("Error while reading config file !");
+		m_print->printError(reader.getFormattedErrorMessages());
 		throw std::exception();
+	}
 	std::string	name = root.get("mode", "bar").asString();
 	if (name == "bar")
 		m_mode = Config::BAR;
@@ -30,10 +34,12 @@ Config::Config(std::string filename) : m_filename(filename)
 		m_mode = Config::CAISSE;
 	else if (name == "kve")
 		m_mode = Config::KVE;
-	m_config["server"] = root.get("server", "127.0.0.1").asString();
-	m_config["db"] = root.get("database", "guinche").asString();
-	m_config["user"] = root.get("user", "root").asString();
-	m_config["password"] = root.get("password", "").asString();
+	const Json::Value	mysql = root["mysql"];
+	for (auto i : mysql)
+		m_sql.push_back(std::array<std::string, 4>{{i.get("server", "127.0.0.1").asString(),
+					i.get("database", "guinche").asString(),
+					i.get("user", "root").asString(),
+					i.get("password", "").asString()}});
 	const Json::Value	consos = root["consos"];
 	for (auto i : consos.getMemberNames())
 		m_consos.push_back(std::make_pair(i, consos.get(i, 0.0f).asFloat()));
@@ -50,7 +56,6 @@ Config::Config(std::string filename) : m_filename(filename)
 
 Config::~Config()
 {}
-
 const std::pair<std::string, float>	&Config::getConso(size_t nb) const
 {
 	return m_consos[nb];
@@ -74,4 +79,14 @@ void	Config::setMode(Config::Mode mode)
 const std::string				&Config::operator[](const std::string &name)
 {
 	return m_config[name];
+}
+
+const std::array<std::string, 4>	&Config::getSqlInfo(size_t nb)
+{
+	return m_sql[nb]; 
+}
+
+size_t	Config::getNbSqlInfo() const
+{
+	return m_sql.size();
 }

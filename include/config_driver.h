@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/10 22:25:55 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/17 20:29:05 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/18 18:59:05 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,22 @@
 #include <vector>
 #include <utility>
 #include <cstring>
+#include <array>
+#include "print_driver.h"
 
 class	Config
 {
 	public:
-		Config(std::string filename);
-		Config(const Config&) = delete;
-		Config	&operator=(const Config&) = delete;
+		Config(Printer *p, std::string filename);
+		/* Config(const Config&) = delete; */
+		/* Config	&operator=(const Config&) = delete; */
 		~Config();
 
 		enum Mode {
 			CAISSE,
 			BAR,
 			KVE,
+			ADMIN,
 		};
 
 		const std::pair<std::string, float>	&getConso(size_t nb) const;
@@ -40,10 +43,15 @@ class	Config
 
 		const std::string					&operator[](const std::string &name);
 
+		const std::array<std::string, 4>	&getSqlInfo(size_t nb);
+		size_t								getNbSqlInfo() const;
+
 	private:
+		Printer										*m_print;
 		std::string									m_filename;
 		std::vector<std::pair<std::string, float>>	m_consos;
 		std::map<std::string, std::string>			m_config;
+		std::vector<std::array<std::string, 4>>		m_sql;
 		Mode										m_mode;
 };
 

@@ -145,10 +145,10 @@ bool	Admin::run()
 				m_printer->clearScreen();
 				break;
 			case '0':
-				return false;
+				return true;
 				break;
 			case '1':
-				return true;
+				return false;
 		}
 		m_printer->clearScreen();
 	}
