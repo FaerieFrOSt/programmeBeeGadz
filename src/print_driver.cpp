@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/15 21:59:55 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/18 19:08:34 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/18 22:56:32 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <ncurses.h>
 #include <cstdio>
 
-Printer::Printer(bool isDebug) : m_debug(isDebug)
+Printer::Printer(bool isDebug, Python *p) : m_debug(isDebug), m_python(p)
 {
 	initscr();
 	/* cbreak(); */

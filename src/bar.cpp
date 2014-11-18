@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/15 15:44:24 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/18 19:11:46 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/18 22:04:05 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <unordered_map>
 #include <functional>
 
-Bar::Bar(Printer *printer, NfcDevice *device, Mysql *sql, Config *config) : Mode(printer, device, sql, config)
+Bar::Bar(Printer *printer, NfcDevice *device, std::function<void(std::string&)> &sql, Config *config) : Mode(printer, device, sql, config)
 {}
 
 Bar::~Bar()

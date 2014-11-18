@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/11 14:14:44 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/18 19:03:16 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/18 22:27:11 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "python_driver.h"
 #include "mode.h"
 #include <memory>
+#include <vector>
 
 class	Application
 {
@@ -29,16 +30,18 @@ class	Application
 
 		bool		run();
 
+		void		sendRequest(std::string &request);
+
 	private:
 		std::unique_ptr<Mode>	create_mode();
 		void					clean();
 
-		Printer					*m_printer;
-		Config					*m_config;
-		NfcDevice				*m_nfc;
-		Mysql					*m_mysql;
-		Python					m_python;
-		std::unique_ptr<Mode>	m_mode;
+		Printer									*m_printer;
+		Config									*m_config;
+		NfcDevice								*m_nfc;
+		std::vector<std::unique_ptr<Mysql>>		m_mysql;
+		Python									m_python;
+		std::unique_ptr<Mode>					m_mode;
 };
 
 #endif /* !APPLICATION_H */

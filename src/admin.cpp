@@ -2,7 +2,7 @@
 #include <memory>
 #include <string>
 
-Admin::Admin(Printer *printer, NfcDevice *device, Mysql *sql, Config *config) :
+Admin::Admin(Printer *printer, NfcDevice *device, std::function<void(std::string&)> &sql, Config *config) :
 	Mode(printer, device, sql, config)
 {}
 

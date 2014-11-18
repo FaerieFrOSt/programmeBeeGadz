@@ -6,10 +6,10 @@
 #include "kve.h"
 
 Application::Application(bool debug, char *argv0, char *argv1) : m_printer(nullptr), m_config(nullptr),
-		m_nfc(nullptr), m_mysql(nullptr),
+		m_nfc(nullptr),
 		m_python(argv0), m_mode(nullptr)
 {
-	m_printer = new Printer(debug);
+	m_printer = new Printer(debug, &m_python);
 	try
 	{
 		m_config = new Config(m_printer, argv1 ? argv1 : "config.txt");
@@ -23,13 +23,13 @@ Application::Application(bool debug, char *argv0, char *argv1) : m_printer(nullp
 	{
 		try
 		{
-			m_mysql = new Mysql(m_config->getSqlInfo(i));
+			m_mysql.push_back(std::unique_ptr<Mysql>(new Mysql(m_config->getSqlInfo(i))));
 		} catch (std::exception &e)
 		{
 			m_printer->printError("Error while connecting to mysql database with config " + std::to_string(i));
 		}
 	}
-	if (!m_mysql)
+	if (!m_mysql.size())
 	{
 		m_printer->printError("Error while connecting to database!");
 		while (!m_printer->keyPressed());
@@ -52,7 +52,6 @@ void	Application::clean()
 {
 	delete m_printer;
 	delete m_config;
-	delete m_mysql;
 	delete m_nfc;
 }
 
@@ -61,18 +60,25 @@ Application::~Application()
 	clean();
 }
 
+void Application::sendRequest(std::string &request)
+{
+	for (auto &i : m_mysql)
+		i->sendRequest(request);
+}
+
 std::unique_ptr<Mode>	Application::create_mode()
 {
+	std::function<void(std::string&)>	foo = std::bind(&Application::sendRequest, this, std::placeholders::_1);
 	switch (m_config->getMode())
 	{
 		case Config::BAR:
-			return std::unique_ptr<Mode>(new Bar(m_printer, m_nfc, m_mysql, m_config));
+			return std::unique_ptr<Mode>(new Bar(m_printer, m_nfc, foo, m_config));
 		case Config::CAISSE:
-			return std::unique_ptr<Mode>(new Caisse(m_printer, m_nfc, m_mysql, m_config));
+			return std::unique_ptr<Mode>(new Caisse(m_printer, m_nfc, foo, m_config));
 		case Config::KVE:
-			return std::unique_ptr<Mode>(new Kve(m_printer, m_nfc, m_mysql, m_config));
+			return std::unique_ptr<Mode>(new Kve(m_printer, m_nfc, foo, m_config));
 		case Config::ADMIN:
-			return std::unique_ptr<Mode>(new Admin(m_printer, m_nfc, m_mysql, m_config));
+			return std::unique_ptr<Mode>(new Admin(m_printer, m_nfc, foo, m_config));
 		default:
 			m_printer->printError("Error, mode not reconized");
 			while (!m_printer->keyPressed());

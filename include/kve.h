@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/17 20:08:33 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/18 19:00:13 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/18 22:05:02 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 class	Kve : public Bar
 {
 	public:
-		Kve(Printer *printer, NfcDevice *device, Mysql *sql, Config *config);
+		Kve(Printer *printer, NfcDevice *device, std::function<void(std::string&)> &sql, Config *config);
 		virtual ~Kve();
 
 		virtual bool	run();

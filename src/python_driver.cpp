@@ -4,22 +4,24 @@
 #include <vector>
 
 Python::Python(char *programName) : m_programName(programName)
-{}
-
-void	Python::runFile(const std::string &filename)
 {
 	Py_SetProgramName(m_programName);
 	Py_Initialize();
-	PyRun_SimpleString(readFile(filename).c_str());
+}
+
+Python::~Python()
+{
 	Py_Finalize();
+}
+
+void	Python::runFile(const std::string &filename)
+{
+	PyRun_SimpleString(readFile(filename).c_str());
 }
 
 void	Python::runScript(const std::string &script)
 {
-	Py_SetProgramName(m_programName);
-	Py_Initialize();
 	PyRun_SimpleString(script.c_str());
-	Py_Finalize();
 }
 
 std::string	Python::readFile(const std::string &filename)

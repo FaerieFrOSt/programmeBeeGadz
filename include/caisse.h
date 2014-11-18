@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/15 16:54:34 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/18 18:58:09 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/18 22:04:26 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 class	Caisse : public Mode
 {
 	public:
-		Caisse(Printer *printer, NfcDevice *device, Mysql *sql, Config *config);
+		Caisse(Printer *printer, NfcDevice *device, std::function<void(std::string&)> &sql, Config *config);
 		virtual ~Caisse();
 
 		virtual bool	run();

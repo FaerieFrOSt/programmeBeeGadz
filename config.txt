@@ -3,6 +3,9 @@
 	// Mode de la box
 	"mode" : "bar",
 
+	// Pianss de la box
+	"pianss" : 0,
+
 	// Acces serveur sex
 	"mysql" : {
 		"config_1" : {

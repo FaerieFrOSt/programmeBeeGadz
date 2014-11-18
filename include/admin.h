@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/15 16:17:46 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/18 18:52:19 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/18 22:02:55 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 class	Admin : public Mode
 {
 	public:
-		Admin(Printer *printer, NfcDevice *device, Mysql *sql, Config *config);
+		Admin(Printer *printer, NfcDevice *device, std::function<void(std::string&)> &sql, Config *config);
 		virtual ~Admin();
 
 		virtual bool	run();

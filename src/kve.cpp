@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <functional>
 
-Kve::Kve(Printer *printer, NfcDevice *device, Mysql *sql, Config *config) : Bar(printer, device, sql, config)
+Kve::Kve(Printer *printer, NfcDevice *device, std::function<void(std::string&)> &sql, Config *config) : Bar(printer, device, sql, config)
 {}
 
 Kve::~Kve()

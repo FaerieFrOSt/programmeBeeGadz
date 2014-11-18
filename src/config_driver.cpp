@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/10 22:33:16 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/18 18:59:21 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/18 22:41:58 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ Config::Config(Printer *p, std::string filename) : m_print(p), m_filename(filena
 		m_config["ticket"] = std::to_string(it - m_consos.begin());
 	else
 		m_config["ticket"] = std::to_string(-1);
+	m_config["pianss"] = root.get("pianss", "0").asString();
 }
 
 Config::~Config()

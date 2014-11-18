@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/11 14:55:58 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/18 18:57:14 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/18 22:03:47 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 class	Bar : public Mode
 {
 	public:
-		Bar(Printer *printer, NfcDevice *device, Mysql *sql, Config *config);
+		Bar(Printer *printer, NfcDevice *device, std::function<void(std::string&)> &sql, Config *config);
 		virtual ~Bar();
 
 		virtual bool	run();

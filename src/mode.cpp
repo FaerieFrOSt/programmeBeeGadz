@@ -2,7 +2,7 @@
 #include <string>
 #include <exception>
 
-Mode::Mode(Printer *printer, NfcDevice *device, Mysql *sql, Config *config) : m_printer(printer),
+Mode::Mode(Printer *printer, NfcDevice *device, std::function<void(std::string&)> &sql, Config *config) : m_printer(printer),
 	m_device(device), m_sql(sql), m_config(config)
 {}
 

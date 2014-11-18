@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/11 14:48:12 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/18 18:51:16 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/18 22:01:34 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,12 @@
 #include "card.h"
 #include "config_driver.h"
 #include <string>
+#include <functional>
 
 class	Mode
 {
 	public:
-		Mode(Printer *printer, NfcDevice *device, Mysql *sql, Config *config);
+		Mode(Printer *printer, NfcDevice *device, std::function<void(std::string&)> &sql, Config *config);
 		virtual ~Mode();
 
 		virtual bool	run() = 0;
@@ -45,10 +46,10 @@ class	Mode
 	protected:
 		bool		testCard(Card &card, std::string str);
 		void		writeCard(Card &card);
-		Printer		*m_printer;
-		NfcDevice	*m_device;
-		Mysql		*m_sql;
-		Config		*m_config;
+		Printer								*m_printer;
+		NfcDevice							*m_device;
+		std::function<void(std::string&)>	m_sql;
+		Config								*m_config;
 };
 
 #endif /* !MODE_H */

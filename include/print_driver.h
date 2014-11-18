@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/19 22:30:28 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/16 14:02:03 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/18 22:55:41 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,12 @@
 #include <cstring>
 #include <sstream>
 #include <iomanip>
+#include "python_driver.h"
 
 class   Printer
 {
 	public:
-	Printer(bool isDebug);
+	Printer(bool isDebug, Python *p);
 	~Printer();
 
 	enum    Type {INFO, ERROR, DEBUG};
@@ -38,6 +39,9 @@ class   Printer
 	float	getFloat() const;
 
 	void	clearScreen() const;
+
+	void	printToLCD(std::string message, uint8_t line);
+	void	clearLine(uint8_t line);
 
 	template<typename T>
 	static std::string	valueToString(const T &value, bool hex = false)
@@ -61,6 +65,7 @@ class   Printer
 
 	private:
 	bool    m_debug;
+	Python	*m_python;
 };
 
 #endif /* !PRINT_DRIVER_H */
