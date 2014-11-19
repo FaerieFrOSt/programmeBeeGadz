@@ -10,6 +10,7 @@ Application::Application(bool debug, char *argv0, char *argv1) : m_printer(nullp
 		m_python(argv0), m_mode(nullptr)
 {
 	m_printer = new Printer(debug, &m_python);
+	m_printer->printDebug(argv0);
 	try
 	{
 		m_config = new Config(m_printer, argv1 ? argv1 : "config.txt");

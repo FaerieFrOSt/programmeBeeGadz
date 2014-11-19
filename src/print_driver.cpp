@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/15 21:59:55 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/18 22:56:32 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/19 23:08:33 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <iostream>
 #include <ncurses.h>
 #include <cstdio>
+#include <fstream>
 
 Printer::Printer(bool isDebug, Python *p) : m_debug(isDebug), m_python(p)
 {
@@ -26,6 +27,7 @@ Printer::Printer(bool isDebug, Python *p) : m_debug(isDebug), m_python(p)
 	init_pair(1, COLOR_RED, COLOR_BLACK);
 	init_pair(2, COLOR_BLUE, COLOR_BLACK);
 	init_pair(3, COLOR_WHITE, COLOR_BLACK);
+	m_python->runFile("lcd.py");
 }
 
 Printer::~Printer()
@@ -62,9 +64,24 @@ float	Printer::getFloat() const
 	return tmp;
 }
 
+void	Printer::printLCD(std::string message, uint8_t line) const
+{
+	std::ostringstream	tmp;
+	tmp << "lcd.lcd_display_string(\"" << message.substr(0, 20).c_str() << "\", " << line << ")";
+	m_python->runScript(tmp.str());
+}
+
+void	Printer::clearLine(uint8_t line) const
+{
+	std::ostringstream	tmp;
+	tmp << "lcd.lcd_display_string(\" \" * 20, " << line << ")";
+	m_python->runScript(tmp.str());
+}
+
 void	Printer::clearScreen() const
 {
-	clear();	
+	clear();
+	m_python->runScript("lcd.lcd_clear()");
 }
 
 void    Printer::printMessage(Printer::Type type, std::string message)

@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/19 22:30:28 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/18 22:55:41 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/19 23:08:43 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ class   Printer
 
 	void	clearScreen() const;
 
-	void	printToLCD(std::string message, uint8_t line);
-	void	clearLine(uint8_t line);
+	void	printLCD(std::string message, uint8_t line) const;
+	void	clearLine(uint8_t line) const;
 
 	template<typename T>
 	static std::string	valueToString(const T &value, bool hex = false)
