@@ -2,7 +2,7 @@
 #include <memory>
 #include <string>
 
-Admin::Admin(Printer *printer, NfcDevice *device, std::function<void(std::string&)> &sql, Config *config) :
+Admin::Admin(Printer *printer, NfcDevice *device, std::function<void(std::string)> &sql, Config *config) :
 	Mode(printer, device, sql, config)
 {}
 
@@ -55,10 +55,10 @@ bool	Admin::run()
 		switch (m_printer->getKeyPressed())
 		{
 			case '3':
-				m_printer->clearScreen();
 				end = false;
 				while (!end)
 				{
+					m_printer->clearScreen();
 					m_printer->printInfo("--- Menu ---");
 					m_printer->printInfo("0 - create ADMIN card");
 					m_printer->printInfo("1 - create CONSO card");

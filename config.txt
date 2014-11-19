@@ -4,19 +4,19 @@
 	"mode" : "bar",
 
 	// Pianss de la box
-	"pianss" : 0,
+	"pianss" : "atss",
 
 	// Acces serveur sex
 	"mysql" : {
 		"config_1" : {
-			"server" : "127.0.0.1",
-			"database" : "scores",
+			"server" : "127.0.3.1",
+			"database" : "plup",
 			"user" : "root",
-			"password" : "vive-moi"
+			"password" : ""
 		},
 		"config_2" : {
 			"server" : "127.0.0.1",
-			"database" : "scores",
+			"database" : "guinche",
 			"user" : "root",
 			"password" : "vive-moi"
 		}

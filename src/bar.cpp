@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/15 15:44:24 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/18 22:04:05 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/19 21:42:06 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <unordered_map>
 #include <functional>
 
-Bar::Bar(Printer *printer, NfcDevice *device, std::function<void(std::string&)> &sql, Config *config) : Mode(printer, device, sql, config)
+Bar::Bar(Printer *printer, NfcDevice *device, std::function<void(std::string)> &sql, Config *config) : Mode(printer, device, sql, config)
 {}
 
 Bar::~Bar()
@@ -50,7 +50,7 @@ int	Bar::getConso(Card &card)
 
 bool	Bar::run()
 {
-	std::unordered_map<std::pair<std::string, float>, size_t, Bar::pair_hash, Bar::pair_cmp>	conso;
+	std::unordered_map<size_t, size_t>	conso;
 	std::time_t	time = std::time(nullptr);
 	m_printer->printInfo("Mode bar is running");
 	m_printer->printInfo("Posez une carte CONSO.");
@@ -118,7 +118,10 @@ bool	Bar::run()
 			if (isAdmin(*card))
 				return true;
 			else if (isSOS(*card))
+			{
 				sendSOS();
+				m_printer->printInfo("SOS envoyé");
+			}
 			else if (isDebit(*card) && conso.empty())
 			{
 				m_printer->printDebug("Argent sur la carte : " + Printer::valueToString<float>(getCredit(*card)));
@@ -126,19 +129,22 @@ bool	Bar::run()
 			}
 			else if (isDebit(*card) && !conso.empty())
 			{
-				if (hasTicket(*card) && conso.count(m_config->getConso(getTicket(*card))))
+				if (hasTicket(*card) && conso.count(getTicket(*card)))
 				{
 					m_printer->printDebug(m_config->getConso(getTicket(*card)).first);
-					--conso[m_config->getConso(getTicket(*card))];
-					if (!conso[m_config->getConso(getTicket(*card))])
-						conso.erase(m_config->getConso(getTicket(*card)));
+					--conso[getTicket(*card)];
+					if (!conso[getTicket(*card)])
+						conso.erase(getTicket(*card));
 					m_printer->printInfo("Ticket " + m_config->getConso(getTicket(*card)).first + " utilisé.");
+					sendHistory("ticket " + m_config->getConso(getTicket(*card)).first, m_config->getConso(getTicket(*card)).second);
 					decrementTicket(*card);
 				}
 				if (getCredit(*card) >= getPrice(conso))
 				{
 					m_printer->printInfo("OK");
 					decrementCredit(*card, getPrice(conso));
+					for (auto i : conso)
+						sendHistory(m_config->getConso(i.first).first + " x" + std::to_string(i.second), m_config->getConso(i.first).second * i.second);
 				}
 				else
 					m_printer->printInfo("Pas assez d'argent sur la carte !");
@@ -148,7 +154,7 @@ bool	Bar::run()
 			}
 			else if (isConso(*card))
 			{
-				++conso[m_config->getConso(getConso(*card))];
+				++conso[getConso(*card)];
 				printCommand(conso);
 				time = timer;
 				m_printer->printInfo("Posez une carte DEBIT.");
@@ -164,17 +170,17 @@ bool	Bar::run()
 	return false;
 }
 
-float	Bar::getPrice(std::unordered_map<std::pair<std::string, float>, size_t, Bar::pair_hash, Bar::pair_cmp> &a) const
+float	Bar::getPrice(const std::unordered_map<size_t, size_t> &a) const
 {
 	float	price = 0.0f;
 	for (auto i : a)
-		price += i.second;
+		price += m_config->getConso(i.first).second * i.second;
 	return price;
 }
 
-void	Bar::printCommand(std::unordered_map<std::pair<std::string, float>, size_t, Bar::pair_hash, Bar::pair_cmp> &a) const
+void	Bar::printCommand(const std::unordered_map<size_t, size_t> &a) const
 {
 	m_printer->printInfo("Commande : ");
 	for (auto i : a)
-		m_printer->printInfo(i.first.first + " x" + Printer::valueToString<size_t>(i.second));
+		m_printer->printInfo(m_config->getConso(i.first).first + " x" + Printer::valueToString<size_t>(i.second));
 }

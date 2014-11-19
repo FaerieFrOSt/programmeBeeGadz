@@ -1,8 +1,9 @@
 #include "mode.h"
 #include <string>
 #include <exception>
+#include <ostream>
 
-Mode::Mode(Printer *printer, NfcDevice *device, std::function<void(std::string&)> &sql, Config *config) : m_printer(printer),
+Mode::Mode(Printer *printer, NfcDevice *device, std::function<void(std::string)> &sql, Config *config) : m_printer(printer),
 	m_device(device), m_sql(sql), m_config(config)
 {}
 
@@ -78,6 +79,20 @@ void	Mode::createDebit(Card &card)
 
 void	Mode::sendSOS()
 {
+	std::ostringstream	tmp;
+	tmp << "UPDATE SOS SET sos=1 WHERE pianss=\"" << (*m_config)["pianss"] << "\";";
+	m_printer->printDebug(tmp.str());
+	m_sql(tmp.str());
+}
+
+void	Mode::sendHistory(std::string command, float price)
+{
+	std::ostringstream	tmp;
+	tmp << "INSERT INTO history (pianss, command, price) VALUES (";
+	tmp << "\""<< (*m_config)["pianss"] << "\", \"" << command << "\", " << price;
+	tmp << ");";
+	m_printer->printDebug(tmp.str());
+	m_sql(tmp.str());
 }
 
 void	Mode::writeCard(Card &card)

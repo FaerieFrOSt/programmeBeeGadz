@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <functional>
 
-Kve::Kve(Printer *printer, NfcDevice *device, std::function<void(std::string&)> &sql, Config *config) : Bar(printer, device, sql, config)
+Kve::Kve(Printer *printer, NfcDevice *device, std::function<void(std::string)> &sql, Config *config) : Bar(printer, device, sql, config)
 {}
 
 Kve::~Kve()
@@ -52,7 +52,10 @@ bool	Kve::run()
 			if (isAdmin(*card))
 				return true;
 			else if (isSOS(*card))
+			{
 				sendSOS();
+				m_printer->printInfo("SOS envoyé");
+			}
 			else if (isConso(*card))
 			{
 				m_printer->printInfo("Ceci est une carte CONSO");
@@ -64,7 +67,10 @@ bool	Kve::run()
 				m_printer->printInfo("Entrez le prix du cok'ss : ");
 				float	credit = m_printer->getFloat();
 				if (getCredit(*card) >= credit)
+				{
 					decrementCredit(*card, credit);
+					sendHistory("KVE", credit);
+				}
 				else
 					m_printer->printInfo("Pas assez d'argent sur la carte !");
 				m_printer->printInfo("Posez une cart DEBIT.");

@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/11 14:48:12 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/18 22:01:34 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/19 12:56:15 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 class	Mode
 {
 	public:
-		Mode(Printer *printer, NfcDevice *device, std::function<void(std::string&)> &sql, Config *config);
+		Mode(Printer *printer, NfcDevice *device, std::function<void(std::string)> &sql, Config *config);
 		virtual ~Mode();
 
 		virtual bool	run() = 0;
@@ -43,12 +43,14 @@ class	Mode
 
 		void		sendSOS();
 
+		void		sendHistory(std::string command, float price);
+
 	protected:
 		bool		testCard(Card &card, std::string str);
 		void		writeCard(Card &card);
 		Printer								*m_printer;
 		NfcDevice							*m_device;
-		std::function<void(std::string&)>	m_sql;
+		std::function<void(std::string)>	m_sql;
 		Config								*m_config;
 };
 

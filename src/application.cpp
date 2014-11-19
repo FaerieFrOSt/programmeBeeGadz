@@ -60,7 +60,7 @@ Application::~Application()
 	clean();
 }
 
-void Application::sendRequest(std::string &request)
+void Application::sendRequest(std::string request)
 {
 	for (auto &i : m_mysql)
 		i->sendRequest(request);
@@ -68,7 +68,7 @@ void Application::sendRequest(std::string &request)
 
 std::unique_ptr<Mode>	Application::create_mode()
 {
-	std::function<void(std::string&)>	foo = std::bind(&Application::sendRequest, this, std::placeholders::_1);
+	std::function<void(std::string)>	foo = std::bind(&Application::sendRequest, this, std::placeholders::_1);
 	switch (m_config->getMode())
 	{
 		case Config::BAR:
@@ -95,12 +95,15 @@ bool	Application::run()
 	{
 		try
 		{
+			Config::Mode	tmp = m_config->getMode();
 			if (!m_mode->run())
 				end = true;
 			else
 			{
 				m_mode = create_mode();
 				m_printer->clearScreen();
+				if (m_config->getMode() == Config::ADMIN)
+					m_config->setMode(tmp);
 			}
 		}catch (std::exception &e)
 		{

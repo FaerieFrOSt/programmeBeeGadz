@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/11 14:14:44 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/18 22:27:11 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/19 12:55:45 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class	Application
 
 		bool		run();
 
-		void		sendRequest(std::string &request);
+		void		sendRequest(std::string request);
 
 	private:
 		std::unique_ptr<Mode>	create_mode();

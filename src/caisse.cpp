@@ -1,7 +1,7 @@
 #include "caisse.h"
 #include <exception>
 
-Caisse::Caisse(Printer *printer, NfcDevice *device, std::function<void(std::string&)> &sql, Config *config) :
+Caisse::Caisse(Printer *printer, NfcDevice *device, std::function<void(std::string)> &sql, Config *config) :
 	Mode(printer, device, sql, config)
 {}
 
@@ -68,7 +68,10 @@ bool	Caisse::run()
 			if (isAdmin(*card))
 				return true;
 			else if (isSOS(*card))
+			{
 				sendSOS();
+				m_printer->printInfo("SOS envoyé");
+			}
 			else if (isConso(*card))
 			{
 				m_printer->printInfo("Ceci est une carte CONSO");
@@ -84,13 +87,21 @@ bool	Caisse::run()
 			{
 				m_printer->printInfo("Montant sur la carte : " + Printer::valueToString<float>(getCredit(*card)));
 				if (hasTicket(*card))
-					m_printer->printInfo("Ticket sur la carte : " + m_config->getConso(getTicket(*card)).first);
+				{
+					try
+					{
+						m_printer->printInfo("Ticket sur la carte : " + m_config->getConso(getTicket(*card)).first);
+					} catch (std::exception &e)
+					{}
+				}
 				m_printer->printInfo("Montant (0) ou ticket (1) (2 pour annuler) ? ");
 				int	key = m_printer->getKeyPressed();
 				if (key == '1')
 				{
 					setTicket(*card, std::stoi((*m_config)["ticket"]));
-					m_printer->printInfo("Ticket " + (*m_config)["ticket"] + " ajouté.");
+					auto	tmp = m_config->getConso(std::stoi((*m_config)["ticket"]));
+					m_printer->printInfo("Ticket " + tmp.first + " ajouté.");
+					sendHistory("DEBIT ticket " + tmp.first, tmp.second);
 					m_printer->printInfo("Posez une carte");
 				}
 				else if (key == '0')
@@ -98,6 +109,7 @@ bool	Caisse::run()
 					m_printer->printInfo("Entrez le montant à ajouter sur la carte : ");
 					float	credit = m_printer->getFloat();
 					incrementCredit(*card, credit);
+					sendHistory("DEBIT", credit);
 					m_printer->printInfo("Montant sur la carte : " + Printer::valueToString<float>(getCredit(*card)));
 					m_printer->printInfo("Posez une carte");
 				}
