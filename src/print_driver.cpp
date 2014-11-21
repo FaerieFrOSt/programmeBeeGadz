@@ -69,14 +69,14 @@ float	Printer::getFloat() const
 void	Printer::printLCD(std::string message, uint8_t line) const
 {
 	std::ostringstream	tmp;
-	tmp << "lcd.lcd_display_string(\"" << message.substr(0, 20).c_str() << "\", " << line << ")";
+	tmp << "lcd.lcd_display_string(\"" << message.c_str() << "\", " << std::to_string(line) << ")";
 	m_python->runScript(tmp.str());
 }
 
 void	Printer::clearLine(uint8_t line) const
 {
 	std::ostringstream	tmp;
-	tmp << "lcd.lcd_display_string(\" \" * 20, " << line << ")";
+	tmp << "lcd.lcd_display_string(\" \" * 20, " << std::to_string(line) << ")";
 	m_python->runScript(tmp.str());
 }
 

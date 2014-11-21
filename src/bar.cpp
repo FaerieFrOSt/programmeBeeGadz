@@ -52,12 +52,11 @@ bool	Bar::run()
 {
 	std::unordered_map<size_t, size_t>	conso;
 	std::time_t	time = std::time(nullptr);
-	std::time_t	timePrint = std::time(nullptr);
 	m_printer->printInfo("Mode bar is running");
 	m_printer->printInfo("Posez une carte CONSO.");
-	m_printer->printLCD("Attente d'une CONSO", 0);
 	std::unique_ptr<Card>	card(nullptr);
 	bool					read = false;
+	setCommand("MODE BAR", 0, 2);
 	while (true)
 	{
 		try
@@ -67,10 +66,6 @@ bool	Bar::run()
 			{
 				conso.clear();
 				m_printer->printInfo("Commande annulée.");
-				m_printer->clearLine(0);
-				m_printer->clearLine(1);
-				m_printer->printLCD("Commande annulée", 1);
-				timePrint = timer;
 				m_printer->printInfo("Posez une carte CONSO.");
 				time = timer;
 			}
@@ -78,14 +73,9 @@ bool	Bar::run()
 			{
 				conso.clear();
 				m_printer->printInfo("Commande annulée.");
-				m_printer->clearLine(1);
-				m_printer->printLCD("Commande annulée", 1);
-				timePrint = timer;
 				m_printer->printInfo("Posez une carte CONSO.");
 				time = timer;
 			}
-			if (timer - timePrint >= 5)
-				m_printer->clearLine(1);
 			if (!card)
 			{
 				read = false;
@@ -96,9 +86,6 @@ bool	Bar::run()
 				if (!isConso(*card) && !conso.empty())
 				{
 					m_printer->printInfo("Commande annulée.");
-					m_printer->clearLine(1);
-					m_printer->printLCD("Commande annulée", 1);
-					timePrint = timer;
 					conso.clear();
 					time = timer;
 				}
@@ -112,8 +99,6 @@ bool	Bar::run()
 			if (!read)
 			{
 				m_printer->printInfo("Lecture de la carte en cours, ne pas retirer la carte.");
-				m_printer->printLCD("  LECTURE EN COURS  ", 2);
-				m_printer->printLCD("   NE PAS RETIRER   ", 3);
 				try
 				{
 					if (!card->readSector(1))
@@ -123,9 +108,6 @@ bool	Bar::run()
 					if (!conso.empty())
 					{
 						m_printer->printInfo("Commande annulée.");
-						m_printer->clearLine(1);
-						m_printer->printLCD("Commande annulée", 1);
-						timePrint = timer;
 						conso.clear();
 						time = timer;
 					}
@@ -134,8 +116,6 @@ bool	Bar::run()
 				}
 				read = true;
 				m_printer->printInfo("Lecture terminée");
-				m_printer->printLCD("  LECTURE TERMINEE  ", 2);
-				m_printer->clearLine(3);
 			}
 			if (isAdmin(*card))
 				return true;
@@ -143,7 +123,6 @@ bool	Bar::run()
 			{
 				sendSOS();
 				m_printer->printInfo("SOS envoyé");
-				m_printer->printLCD("     SOS ENVOYE     ", 3);
 			}
 			else if (isDebit(*card) && conso.empty())
 			{
@@ -187,6 +166,7 @@ bool	Bar::run()
 				m_printer->printError("Carte corrompue !");
 				m_printer->printInfo("Posez une carte CONSO.");
 			}
+			print();
 		} catch (std::exception &e)
 		{}
 	}

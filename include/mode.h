@@ -21,6 +21,8 @@
 #include "config_driver.h"
 #include <string>
 #include <functional>
+#include <utility>
+#include <array>
 
 class	Mode
 {
@@ -46,6 +48,12 @@ class	Mode
 		void		sendHistory(std::string command, float price);
 
 	protected:
+		std::array<std::pair<std::string, size_t>, 4>	m_screen;
+		std::array<std::time_t, 4>			m_time;
+		std::array<bool, 4>				m_printed;
+
+		void		setCommand(std::string command, size_t line, size_t time = 0);
+		void		print();
 		bool		testCard(Card &card, std::string str);
 		void		writeCard(Card &card);
 		Printer								*m_printer;

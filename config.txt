@@ -1,7 +1,7 @@
 // Configuration pour la box
 {
 	// Mode de la box
-	"mode" : "kve",
+	"mode" : "bar",
 
 	// Pianss de la box
 	"pianss" : "atss",
@@ -18,7 +18,7 @@
 			"server" : "127.0.0.1",
 			"database" : "guinche",
 			"user" : "root",
-			"password" : "vive-moi"
+			"password" : "root"
 		}
 	},
 
