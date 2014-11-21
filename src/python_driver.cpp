@@ -3,7 +3,7 @@
 #include <fstream>
 #include <vector>
 
-Python::Python(char *programName) : m_programName(programName)
+Python::Python(bool isOk, char *programName) : m_programName(programName), m_isOk(isOk)
 {
 	Py_SetProgramName(m_programName);
 	Py_Initialize();
@@ -16,12 +16,14 @@ Python::~Python()
 
 void	Python::runFile(const std::string &filename)
 {
-	PyRun_SimpleString(readFile(filename).c_str());
+	if (m_isOk)
+		PyRun_SimpleString(readFile(filename).c_str());
 }
 
 void	Python::runScript(const std::string &script)
 {
-	PyRun_SimpleString(script.c_str());
+	if (m_isOk)
+		PyRun_SimpleString(script.c_str());
 }
 
 std::string	Python::readFile(const std::string &filename)

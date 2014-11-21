@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/10 22:25:55 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/19 21:36:36 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/20 22:53:59 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,16 @@ class	Config
 		const std::array<std::string, 4>	&getSqlInfo(size_t nb);
 		size_t								getNbSqlInfo() const;
 
+		const std::vector<uint8_t>			&getKeys(bool isCaisse) const;
+
 	private:
 		Printer										*m_print;
 		std::string									m_filename;
 		std::vector<std::pair<std::string, float>>	m_consos;
 		std::map<std::string, std::string>			m_config;
 		std::vector<std::array<std::string, 4>>		m_sql;
+		std::vector<uint8_t>						m_keys;
+		std::vector<uint8_t>						m_key;
 		Mode										m_mode;
 };
 

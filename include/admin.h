@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/15 16:17:46 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/19 12:56:36 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/20 18:26:15 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ class	Admin : public Mode
 		void	createAdmin(Card &card);
 		void	createConso(Card &card, uint8_t id);
 		void	createSOS(Card &card);
+		void	setTicket(Card &card, uint8_t id);
 
 };
 

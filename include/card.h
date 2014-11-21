@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/19 23:08:09 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/19 22:32:44 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/20 23:03:17 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 class   Card
 {
 	public:
-	Card(void* device, Printer *print, nfc_target target); // Throws an exception when there is an error
+	Card(void* device, Printer *print, nfc_target target, const std::vector<uint8_t> &keys); // Throws an exception when there is an error
 	Card(const Card&);
 	Card&	operator=(const Card&);
 
@@ -60,7 +60,7 @@ class   Card
 	size_t			calculateSector(size_t block, size_t *nb = nullptr) const;
 
 
-	const static uint8_t		m_keys[];
+	std::vector<uint8_t>		m_keys;
 	nfc_target					m_target;
 	mifare_param				m_param;
 	Type						m_type;
@@ -71,7 +71,6 @@ class   Card
 	size_t						m_nbSectors;
 	std::function<bool(size_t)>	m_readCard;
 	std::function<bool(size_t)>	m_writeCard;
-	const static size_t			m_nbKeys;
 };
 
 #endif /* !CARD_H */

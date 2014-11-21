@@ -69,7 +69,7 @@ NfcDevice::~NfcDevice()
 		nfc_exit(m_context);
 }
 
-std::unique_ptr<Card>	NfcDevice::findCard(bool infinite)
+std::unique_ptr<Card>	NfcDevice::findCard(const std::vector<uint8_t> &keys, bool infinite)
 {
 	nfc_target	target;
 
@@ -80,7 +80,7 @@ std::unique_ptr<Card>	NfcDevice::findCard(bool infinite)
 		m_print->printDebug("Found NFC tag : ");
 		m_print->printDebug("UID : " + Printer::arrayToString<uint8_t>(target.nti.nai.abtUid, target.nti.nai.szUidLen));
 		m_print->printDebug("Type : " + Printer::arrayToString<uint8_t>(&target.nti.nai.abtAtqa[1], 1));
-		std::unique_ptr<Card>	tmp(new Card(this, m_print, target));
+		std::unique_ptr<Card>	tmp(new Card(this, m_print, target, keys));
 		return std::move(tmp);
 	}
 	/* m_print->printDebug("No card present."); */

@@ -72,8 +72,11 @@ void	Mode::createDebit(Card &card)
 		card[1][0][i] = name[i];
 	card[1][0][name.size()] = 0;
 	std::memcpy(&card[1][1][0], &credit, 4);
+	card[1][2][0] = 0;
+	card[1][2][1] = 0;
 	card[1][1].setState(Block::MODIFIED);
 	card[1][0].setState(Block::MODIFIED);
+	card[1][2].setState(Block::MODIFIED);
 	writeCard(card);
 }
 

@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/11 14:14:44 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/19 12:55:45 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/20 13:20:56 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 class	Application
 {
 	public:
-		Application(bool debug, char *argv0, char *argv1 = nullptr);
+		Application(bool debug, bool lcd, char *argv0, char *argv1 = nullptr);
 		Application(const Application&) = delete;
 		Application	&operator=(const Application&) = delete;
 		~Application();

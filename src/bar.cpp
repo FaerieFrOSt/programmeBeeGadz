@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/15 15:44:24 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/19 23:08:08 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/20 23:07:27 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,11 @@ bool	Bar::run()
 		try
 		{
 			std::time_t	timer = std::time(nullptr);
-			if (m_printer->getKeyPressedNB() == '-')
+			if (m_printer->getKeyPressedNB() == '-' && !conso.empty())
 			{
 				conso.clear();
 				m_printer->printInfo("Commande annulée.");
+				m_printer->clearLine(0);
 				m_printer->clearLine(1);
 				m_printer->printLCD("Commande annulée", 1);
 				timePrint = timer;
@@ -88,7 +89,7 @@ bool	Bar::run()
 			if (!card)
 			{
 				read = false;
-				card = m_device->findCard(false);
+				card = m_device->findCard(m_config->getKeys(false), false);
 			}
 			else if (!m_device->findCard(card->getUid(), card->sizeUid()))
 			{
@@ -101,7 +102,7 @@ bool	Bar::run()
 					conso.clear();
 					time = timer;
 				}
-				card = m_device->findCard(false);
+				card = m_device->findCard(m_config->getKeys(false), false);
 				read = false;
 			}
 			else

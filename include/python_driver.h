@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/11 11:43:04 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/18 22:50:56 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/20 13:20:44 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 class	Python
 {
 	public:
-		Python(char *programName);
+		Python(bool lcd, char *programName);
 		Python(const Python&) = delete;
 		Python	&operator=(const Python&) = delete;
 		~Python();
@@ -29,6 +29,7 @@ class	Python
 
 	private:
 		char	*m_programName;
+		bool	m_isOk;
 		std::string	readFile(const std::string &filename);
 };
 

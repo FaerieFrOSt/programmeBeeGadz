@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/17 01:17:22 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/18 19:01:35 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/20 23:04:57 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "print_driver.h"
 #include "card.h"
 #include "mifare.h"
+#include <vector>
 
 class   NfcDevice
 {
@@ -29,7 +30,7 @@ class   NfcDevice
 
 	bool					infiniteSelect(bool infinite);
 	bool					mifareCmd(mifare_cmd key, size_t block, mifare_param *param);
-	std::unique_ptr<Card>	findCard(bool infinite = false);
+	std::unique_ptr<Card>	findCard(const std::vector<uint8_t> &keys, bool infinite = false);
 	bool					findCard(const uint8_t uid[8], size_t len);
 
 	private:

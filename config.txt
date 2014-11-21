@@ -1,7 +1,7 @@
 // Configuration pour la box
 {
 	// Mode de la box
-	"mode" : "bar",
+	"mode" : "kve",
 
 	// Pianss de la box
 	"pianss" : "atss",

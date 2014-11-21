@@ -31,6 +31,14 @@ void	Admin::createAdmin(Card &card)
 	writeCard(card);
 }
 
+void	Admin::setTicket(Card &card, uint8_t id)
+{
+	card[1][2][0] = 1;
+	card[1][2][1] = id;
+	card[1][2].setState(Block::MODIFIED);
+	writeCard(card);
+}
+
 void	Admin::createSOS(Card &card)
 {
 	std::string	name("SOS");
@@ -71,7 +79,7 @@ bool	Admin::run()
 					{
 						case '0':
 							m_printer->printInfo("Posez une carte");
-							card = m_device->findCard(true);
+							card = m_device->findCard(m_config->getKeys(true), true);
 							createAdmin(*card);
 							break;
 						case '1':
@@ -90,17 +98,27 @@ bool	Admin::run()
 								break;
 							}
 							m_printer->printInfo("Posez une carte");
-							card = m_device->findCard(true);
+							card = m_device->findCard(m_config->getKeys(true), true);
 							createConso(*card, tmp);
 							break;
 						case '2':
 							m_printer->printInfo("Posez une carte");
-							card = m_device->findCard(true);
+							card = m_device->findCard(m_config->getKeys(true), true);
 							createDebit(*card);
+							m_printer->printInfo("Ajouter un ticket ? (0/1) ");
+							switch (m_printer->getKeyPressed())
+							{
+								case '1':
+									setTicket(*card, std::stoi((*m_config)["ticket"]));
+									m_printer->printInfo("Ticket ajouté.");
+									break;
+								default:
+									break;
+							}
 							break;
 						case '3':
 							m_printer->printInfo("Posez une carte");
-							card = m_device->findCard(true);
+							card = m_device->findCard(m_config->getKeys(true), true);
 							createSOS(*card);
 							break;
 						default:

@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/15 21:59:55 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/19 23:08:33 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/20 20:15:46 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ int	Printer::getKeyPressed() const
 
 float	Printer::getFloat() const
 {
+	fseek(stdin, 0, SEEK_END);
+	nodelay(stdscr, FALSE);
 	echo();
 	float	tmp = 0.0f;
 	scanw("%f", &tmp);

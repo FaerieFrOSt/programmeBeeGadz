@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/10 22:33:16 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/19 21:37:09 by availlan         ###   ########.fr       */
+/*   Updated: 2014/11/21 11:40:39 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,29 @@ Config::Config(Printer *p, std::string filename) : m_print(p), m_filename(filena
 	else
 		m_config["ticket"] = std::to_string(-1);
 	m_config["pianss"] = root.get("pianss", "").asString();
+	/* const Json::Value	keys = root["keys"]; */
+	/* for (auto i : keys) */
+		/* m_keys.push_back(i.asInt()); */
+	/* const Json::Value	key = root["key"]; */
+	/* for (auto i : key) */
+	/* 	m_key.push_back(i.asInt()); */
+	m_key.push_back(0xff);
+	m_key.push_back(0xff);
+	m_key.push_back(0xff);
+	m_key.push_back(0xff);
+	m_key.push_back(0xff);
+	m_key.push_back(0xff);
+	m_keys.push_back(0xff);
+	m_keys.push_back(0xff);
+	m_keys.push_back(0xff);
+	m_keys.push_back(0xff);
+	m_keys.push_back(0xff);
+	m_keys.push_back(0xff);
 }
 
 Config::~Config()
 {}
+
 const std::pair<std::string, float>	&Config::getConso(size_t nb) const
 {
 	if (nb >= m_consos.size())
@@ -92,4 +111,11 @@ const std::array<std::string, 4>	&Config::getSqlInfo(size_t nb)
 size_t	Config::getNbSqlInfo() const
 {
 	return m_sql.size();
+}
+
+const std::vector<uint8_t>	&Config::getKeys(bool isCaisse) const
+{
+	if (isCaisse)
+		return m_keys;
+	return m_key;
 }

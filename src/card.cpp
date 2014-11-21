@@ -3,21 +3,7 @@
 #include "nfc_driver.h"
 #include <exception>
 
-const uint8_t	Card::m_keys[] = 
-{
-	0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
-	0xd3, 0xf7, 0xd3, 0xf7, 0xd3, 0xf7,
-	0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5,
-	0xb0, 0xb1, 0xb2, 0xb3, 0xb4, 0xb5,
-	0x4d, 0x3a, 0x99, 0xc3, 0x51, 0xdd,
-	0x1a, 0x98, 0x2c, 0x7e, 0x45, 0x9a,
-	0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-	0xab, 0xcd, 0xed, 0x12, 0x34, 0x56,
-};
-const size_t	Card::m_nbKeys = 9;
-
-Card::Card(void *device, Printer *print, nfc_target target) : m_print(print), m_device(device)
+Card::Card(void *device, Printer *print, nfc_target target, const std::vector<uint8_t> &keys) : m_keys(keys), m_print(print), m_device(device)
 {
 	std::memcpy(&m_target, &target, sizeof(m_target));
 	if (!m_print || !m_device)
@@ -44,7 +30,7 @@ Card::Card(void *device, Printer *print, nfc_target target) : m_print(print), m_
 	std::memcpy(m_param.mpa.abtAuthUid, m_target.nti.nai.abtUid, m_uidLen);
 }
 
-Card::Card(const Card &other) : m_print(other.m_print), m_device(other.m_device)
+Card::Card(const Card &other) : m_keys(other.m_keys), m_print(other.m_print), m_device(other.m_device)
 
 {
 	std::memcpy(&m_target, &other.m_target, sizeof(m_target));
@@ -74,6 +60,7 @@ Card::Card(const Card &other) : m_print(other.m_print), m_device(other.m_device)
 
 Card&	Card::operator=(const Card &other)
 {
+	m_keys = other.m_keys;
 	m_print = other.m_print;
 	m_device = other.m_device;
 	std::memcpy(&m_target, &other.m_target, sizeof(m_target));
@@ -185,6 +172,7 @@ bool	Card::authenticate(size_t block)
 	size_t	sector = calculateSector(block);
 	do
 	{
+		m_data[sector].setAuthentificationKey(&m_keys[i]);
 		std::memcpy(m_param.mpa.abtKey, m_data[sector].authentificationKey(), 6);
 		m_print->printDebug("Trying with key " + Printer::arrayToString<uint8_t>(m_param.mpa.abtKey, 6) + " on key " + std::string(m_data[sector].keyB() ? "B" : "A"));
 		if (device->mifareCmd(m_data[sector].keyB() ? MC_AUTH_B : MC_AUTH_A, block, &m_param))
@@ -197,9 +185,8 @@ bool	Card::authenticate(size_t block)
 			m_print->printError("The tag was removed !");
 			throw std::exception();
 		}
-		m_data[sector].setAuthentificationKey(&m_keys[i]);
 		i += 6;
-	}while (i < m_nbKeys * 6);
+	}while (i < m_keys.size() * 6);
 	m_print->printError("Error while trying to authenticate block " + Printer::valueToString<size_t>(block, true));
 	return false;
 }
