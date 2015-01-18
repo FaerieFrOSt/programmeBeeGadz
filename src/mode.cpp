@@ -20,7 +20,7 @@ void	Mode::print()
 	std::time_t	timer = std::time(nullptr);
 	for (size_t i = 0; i < m_screen.size(); ++i)
 	{
-		if (m_time[i] && timer - m_time[i] >= m_screen[i].second)
+		if (m_time[i] && timer - m_time[i] >= (int)m_screen[i].second)
 		{
 			m_printer->clearLine(i + 1);
 			m_screen[i] = std::make_pair("", 0);
