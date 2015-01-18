@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/11 14:48:12 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/19 12:56:15 by availlan         ###   ########.fr       */
+/*   Updated: 2015/01/18 14:26:55 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,25 @@
 #include <functional>
 #include <utility>
 #include <array>
+#include <queue>
+
+class	Line
+{
+	public:
+		Line(std::string message, size_t time) : m_message(message), m_time(time), m_printed(-1)
+		{}
+
+		size_t		get_time() const { return m_time; }
+		std::string	get_message() const { return m_message; }
+
+		void		set_printed() { m_printed = std::time(nullptr); }
+		std::time_t	get_printed() const { return m_printed; }
+
+	private:
+		std::string	m_message;
+		size_t		m_time;
+		std::time_t	m_printed;
+};
 
 class	Mode
 {
@@ -48,9 +67,7 @@ class	Mode
 		void		sendHistory(std::string command, float price);
 
 	protected:
-		std::array<std::pair<std::string, size_t>, 4>	m_screen;
-		std::array<std::time_t, 4>			m_time;
-		std::array<bool, 4>				m_printed;
+		std::array<std::queue<Line>, 4>	m_screen;
 
 		void		setCommand(std::string command, size_t line, size_t time = 0);
 		void		print();

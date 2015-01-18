@@ -6,10 +6,6 @@
 Mode::Mode(Printer *printer, NfcDevice *device, std::function<void(std::string)> &sql, Config *config) : m_printer(printer),
 	m_device(device), m_sql(sql), m_config(config)
 {
-	for (auto &i : m_screen)
-		i = std::make_pair("", 0);
-	for (auto &i : m_printed)
-		i = true;
 }
 
 Mode::~Mode()
@@ -20,25 +16,26 @@ void	Mode::print()
 	std::time_t	timer = std::time(nullptr);
 	for (size_t i = 0; i < m_screen.size(); ++i)
 	{
-		if (m_time[i] && timer - m_time[i] >= (int)m_screen[i].second)
+		if (!m_screen[i].empty())
 		{
-			m_printer->clearLine(i + 1);
-			m_screen[i] = std::make_pair("", 0);
-			m_time[i] = timer;
-			m_printed[i] = false;
-		}else if (!m_printed[i])
-		{
-			m_printer->printLCD(m_screen[i].first, i + 1);
-			m_printed[i] = true;
+			if (m_screen[i].front().get_printed() == (std::time_t)(-1))
+			{
+				m_printer->clearLine(i + 1);
+				m_screen[i].front().set_printed();
+				m_printer->printLCD(m_screen[i].front().get_message(), i + 1);
+			} else if (m_screen[i].front().get_time()
+					&& timer - m_screen[i].front().get_printed() >= (int)m_screen[i].front().get_time())
+			{
+				m_screen[i].pop();
+				m_printer->clearLine(i + 1);
+			}
 		}
 	}	
 }
 
 void	Mode::setCommand(std::string command, size_t line, size_t time)
 {
-	m_screen[line] = std::make_pair(command, time);
-	m_printed[line] = false;
-	m_time[line] = std::time(nullptr);
+	m_screen[line].push(Line(command, time));
 }
 
 bool	Mode::testCard(Card &card, std::string str)

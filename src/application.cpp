@@ -5,9 +5,9 @@
 #include "caisse.h"
 #include "kve.h"
 
-Application::Application(bool debug, bool lcd, char *argv0, char *argv1) : m_printer(nullptr), m_config(nullptr),
+Application::Application(bool debug, char *argv0, char *argv1) : m_printer(nullptr), m_config(nullptr),
 		m_nfc(nullptr),
-		m_python(lcd, argv0), m_mode(nullptr)
+		m_python(argv0), m_mode(nullptr)
 {
 	m_printer = new Printer(debug, &m_python);
 	m_printer->printDebug(argv0);

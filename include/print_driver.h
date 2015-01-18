@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/10/19 22:30:28 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/19 23:08:43 by availlan         ###   ########.fr       */
+/*   Updated: 2015/01/18 12:08:37 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ class   Printer
 
 	private:
 	bool    m_debug;
+	bool	m_lcd;
 	Python	*m_python;
 };
 

@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/15 21:59:55 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/20 20:15:46 by availlan         ###   ########.fr       */
+/*   Updated: 2015/01/18 13:48:06 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,10 @@ Printer::Printer(bool isDebug, Python *p) : m_debug(isDebug), m_python(p)
 	init_pair(1, COLOR_RED, COLOR_BLACK);
 	init_pair(2, COLOR_BLUE, COLOR_BLACK);
 	init_pair(3, COLOR_WHITE, COLOR_BLACK);
-	m_python->runFile("lcd.py");
+	if (m_python->runFile("lcd.py") < 0)
+		m_lcd = false;
+	else
+		m_lcd = true;
 }
 
 Printer::~Printer()
@@ -70,20 +73,23 @@ void	Printer::printLCD(std::string message, uint8_t line) const
 {
 	std::ostringstream	tmp;
 	tmp << "lcd.lcd_display_string(\"" << message.c_str() << "\", " << std::to_string(line) << ")";
-	m_python->runScript(tmp.str());
+	if (m_lcd)
+		m_python->runScript(tmp.str());
 }
 
 void	Printer::clearLine(uint8_t line) const
 {
 	std::ostringstream	tmp;
 	tmp << "lcd.lcd_display_string(\" \" * 20, " << std::to_string(line) << ")";
-	m_python->runScript(tmp.str());
+	if (m_lcd)
+		m_python->runScript(tmp.str());
 }
 
 void	Printer::clearScreen() const
 {
 	clear();
-	m_python->runScript("lcd.lcd_clear()");
+	if (m_lcd)
+		m_python->runScript("lcd.lcd_clear()");
 }
 
 void    Printer::printMessage(Printer::Type type, std::string message)
