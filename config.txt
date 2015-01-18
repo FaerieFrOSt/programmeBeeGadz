@@ -24,12 +24,14 @@
 
 	// Consos disponibles avec les prix
 	"consos" : {
-		"Bière" : 1.5,
-		"Coupe champ" : 2,
-		"B. champagne" : 20,
-		"Kir" : 2
+		"Bière" : 1,
+		"Simple dose" : 1.5,
+		"Double dose" : 2.5,
+		"Cocktail" : 2,
+		"Protox" : 2,
+		"Soft" : 0.5
 	},
 
 	// Ticket, le nom doit correspondre à une conso
-	"ticket" : "B. champagne"
+	"ticket" : ""
 }
