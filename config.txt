@@ -1,7 +1,7 @@
 // Configuration pour la box
 {
 	// Mode de la box
-	"mode" : "bar",
+	"mode" : "admin",
 
 	// Pianss de la box
 	"pianss" : "atss",
@@ -9,10 +9,10 @@
 	// Acces serveur sex
 	"mysql" : {
 		"config_1" : {
-			"server" : "127.0.3.1",
-			"database" : "plup",
+			"server" : "127.0.0.1",
+			"database" : "gala",
 			"user" : "root",
-			"password" : ""
+			"password" : "vive-moi"
 		},
 		"config_2" : {
 			"server" : "127.0.0.1",

@@ -29,12 +29,18 @@ void	Mode::print()
 				m_screen[i].pop();
 				m_printer->clearLine(i + 1);
 			}
+			else if (!m_screen[i].front().get_time() && m_screen[i].size() > 1)
+			{
+				m_screen[i].pop();
+				m_printer->clearLine(i + 1);
+			}
 		}
 	}	
 }
 
 void	Mode::setCommand(std::string command, size_t line, size_t time)
 {
+	command = command.substr(0, 21);
 	m_screen[line].push(Line(command, time));
 }
 

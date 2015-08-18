@@ -6,7 +6,7 @@
 /*   By: availlan <availlan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/11/10 22:33:16 by availlan          #+#    #+#             */
-/*   Updated: 2014/11/21 11:40:39 by availlan         ###   ########.fr       */
+/*   Updated: 2015/03/19 17:35:48 by availlan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ Config::Config(Printer *p, std::string filename) : m_print(p), m_filename(filena
 		m_mode = Config::CAISSE;
 	else if (name == "kve")
 		m_mode = Config::KVE;
+	else if (name == "admin")
+		m_mode = Config::ADMIN;
 	const Json::Value	mysql = root["mysql"];
 	for (auto i : mysql)
 		m_sql.push_back(std::array<std::string, 4>{{i.get("server", "127.0.0.1").asString(),
