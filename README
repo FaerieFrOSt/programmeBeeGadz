@@ -1,1 +1,3 @@
-https://learn.adafruit.com/adafruit-pn532-rfid-nfc/mifare
+This is a C++ contactless payment program. You'll need an usb nfc reader to use it, alongside with a sql server.
+
+Link to nfc card description : https://learn.adafruit.com/adafruit-pn532-rfid-nfc/mifare
