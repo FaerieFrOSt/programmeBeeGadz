@@ -1,1 +1,3 @@
 Error while trying to write KEYB
+
+Rewrite the card class and add polymorphism and factory building.
