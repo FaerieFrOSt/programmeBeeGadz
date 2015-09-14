@@ -27,6 +27,8 @@
 // SO IF YOU DONT WANT TO CHANGE IT BE SURE TO WRITE IT INSIDE BLOCK 3 OF EACH SECTOR BEFORE WRITING
 // THE BLOCK 3 BACK TO THE CARD
 
+// TODO : rewrite this class to use polymorphism and factory building.
+
 class   Card
 {
 	public:
